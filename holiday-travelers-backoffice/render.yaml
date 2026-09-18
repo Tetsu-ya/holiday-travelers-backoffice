@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: holiday-travelers-back-office
+    runtime: docker
+    plan: starter
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: holiday-travelers-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: holiday-travelers-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: holiday-travelers-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: holiday-travelers-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: holiday-travelers-db
+          property: password
+
+databases:
+  - name: holiday-travelers-db
+    plan: starter
+    postgresMajorVersion: "16"

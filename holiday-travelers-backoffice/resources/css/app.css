@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+	.sidebar-scrollbar {
+		scrollbar-width: thin;
+		scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+	}
+
+	.sidebar-scrollbar::-webkit-scrollbar {
+		width: 5px;
+	}
+
+	.sidebar-scrollbar::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.sidebar-scrollbar::-webkit-scrollbar-thumb {
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.2);
+	}
+}
+
+@layer utilities {
+	.dark .bg-background {
+		background-color: #111827;
+	}
+
+	.dark .bg-card {
+		background-color: #1f2937;
+	}
+
+	.dark .border-border {
+		border-color: #374151;
+	}
+
+	.dark .text-primary {
+		color: #f9fafb;
+	}
+
+	.dark .text-gray-500 {
+		color: #9ca3af;
+	}
+
+	.dark .text-gray-400 {
+		color: #9ca3af;
+	}
+
+	.dark .text-gray-300 {
+		color: #d1d5db;
+	}
+
+	.dark .text-gray-600,
+	.dark .text-gray-700 {
+		color: #d1d5db;
+	}
+
+	.dark .text-gray-800,
+	.dark .text-gray-900,
+	.dark .text-black {
+		color: #f3f4f6;
+	}
+
+	.dark .bg-white,
+	.dark .bg-gray-50 {
+		background-color: #1f2937;
+	}
+
+	.dark .bg-gray-100 {
+		background-color: #374151;
+	}
+
+	.dark .bg-gray-200 {
+		background-color: #4b5563;
+	}
+
+	.dark input,
+	.dark select,
+	.dark textarea {
+		background-color: #1f2937;
+		color: #f9fafb;
+	}
+
+	.dark input::placeholder,
+	.dark textarea::placeholder {
+		color: #9ca3af;
+	}
+
+	.dark option {
+		background-color: #1f2937;
+		color: #f9fafb;
+	}
+
+	.dark .hover\:bg-gray-50:hover {
+		background-color: #374151;
+	}
+}
