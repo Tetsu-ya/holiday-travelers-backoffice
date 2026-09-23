@@ -4,7 +4,7 @@
 @section('content')
 <div class="space-y-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p class="text-xs font-semibold uppercase tracking-[0.2em] text-secondary">Supplier network</p><h2 class="mt-1 font-heading text-2xl font-semibold tracking-tight text-primary">Supplier directory</h2><p class="mt-2 text-sm text-gray-500">Track hotel, transport, and service providers by reliability and rate.</p></div><a href="{{ route('suppliers.create') }}" class="inline-flex items-center justify-center rounded-xl bg-secondary px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-secondary/20 transition hover:-translate-y-0.5">+ Add supplier</a></div>
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="bg-card rounded-2xl border border-border border-t-4 border-t-primary p-4 shadow-sm">
             <div class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">Total suppliers</div>
             <div class="mt-2 text-3xl font-heading font-semibold text-primary">{{ $supplierStats['total'] }}</div>
@@ -12,10 +12,6 @@
         <div class="bg-card rounded-2xl border border-border p-4 shadow-sm">
             <div class="text-xs text-gray-500">Active</div>
             <div class="mt-2 text-3xl font-heading font-semibold text-primary">{{ $supplierStats['active'] }}</div>
-        </div>
-        <div class="bg-card rounded-2xl border border-border p-4 shadow-sm">
-            <div class="text-xs text-gray-500">Needs review</div>
-            <div class="mt-2 text-3xl font-heading font-semibold text-primary">{{ $supplierStats['needs_review'] }}</div>
         </div>
         <div class="bg-card rounded-2xl border border-border p-4 shadow-sm">
             <div class="text-xs text-gray-500">Avg. reliability</div>
@@ -47,10 +43,10 @@
                     @forelse ($suppliers as $supplier)
                         <tr class="transition hover:bg-background/70">
                             <td class="px-5 py-4 font-medium text-primary">{{ $supplier->name }}</td>
-                            <td class="px-5 py-4 capitalize">{{ $supplier->category }}</td>
-                            <td class="px-5 py-4">{{ $supplier->location ?? '—' }}</td>
-                            <td class="px-5 py-4">₱{{ number_format($supplier->base_rate ?? 0, 2) }}</td>
-                            <td class="px-5 py-4">{{ $supplier->reliability_rating ?? 0 }}%</td>
+                            <td class="px-5 py-4"><span class="inline-flex rounded-full bg-primary/5 px-2.5 py-1 text-xs font-semibold capitalize text-primary">{{ str_replace('_', ' ', $supplier->category) }}</span></td>
+                            <td class="px-5 py-4"><div class="flex items-center gap-2 text-gray-600"><span class="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/10 text-xs text-accent">⌖</span><span>{{ $supplier->location ?? 'Location not set' }}</span></div></td>
+                            <td class="px-5 py-4"><span class="font-semibold text-primary">₱{{ number_format($supplier->base_rate ?? 0, 2) }}</span><span class="mt-0.5 block text-[11px] text-gray-400">Starting rate</span></td>
+                            <td class="px-5 py-4"><div class="min-w-28"><div class="mb-1 flex items-center justify-between gap-2"><span class="text-sm font-semibold text-primary">{{ number_format(($supplier->reliability_rating ?? 0) * 20, 0) }}%</span><span class="text-[11px] text-gray-400">reliability</span></div><div class="h-1.5 overflow-hidden rounded-full bg-gray-100"><div class="h-full rounded-full bg-success" style="width: {{ min(($supplier->reliability_rating ?? 0) * 20, 100) }}%"></div></div></div></td>
                             <td class="px-5 py-4">
                                 <span class="px-2.5 py-1 rounded-full text-xs font-semibold
                                     @if (($supplier->status ?? 'active') === 'active') bg-success/10 text-success

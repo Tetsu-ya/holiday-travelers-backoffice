@@ -9,8 +9,8 @@
             <h1 class="text-2xl font-semibold">{{ $supplier->name }}</h1>
         </div>
         <div class="flex items-center gap-3">
-            <a href="{{ route('suppliers.index') }}" class="px-4 py-2 rounded-lg border border-border bg-white">Back</a>
-            <a href="{{ route('suppliers.edit', $supplier) }}" class="px-4 py-2 rounded-lg bg-primary text-white">Edit</a>
+            <a href="{{ route('suppliers.index') }}" class="group inline-flex items-center gap-2 rounded-xl border border-border bg-white px-4 py-2.5 text-sm font-semibold text-primary transition-all duration-200 hover:-translate-y-0.5 hover:border-secondary hover:text-secondary active:translate-y-0 active:scale-95"><span class="transition-transform duration-200 group-hover:-translate-x-1">←</span><span>Back</span></a>
+            <a href="{{ route('suppliers.edit', $supplier) }}" class="group inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/15 transition-all duration-200 hover:-translate-y-0.5 hover:bg-secondary hover:shadow-xl active:translate-y-0 active:scale-95"><span>Edit</span><span class="transition-transform duration-200 group-hover:translate-x-1">→</span></a>
         </div>
     </div>
 

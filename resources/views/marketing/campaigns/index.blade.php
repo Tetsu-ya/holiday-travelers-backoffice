@@ -31,7 +31,7 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="w-full text-sm">
+            <table class="campaign-directory w-full text-sm">
                 <thead class="bg-background text-left text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-500">
                     <tr>
                         <th class="px-5 py-3.5">Name</th>
@@ -47,10 +47,10 @@
                     @forelse ($campaigns as $campaign)
                         <tr class="transition hover:bg-background/70">
                             <td class="px-5 py-4 font-medium text-primary">{{ $campaign->name }}</td>
-                            <td class="px-5 py-4 capitalize">{{ str_replace('_', ' ', $campaign->channel) }}</td>
+                            <td class="px-5 py-4"><span class="inline-flex items-center rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold capitalize text-accent">{{ str_replace('_', ' ', $campaign->channel) }}</span></td>
                             <td class="px-5 py-4">₱{{ number_format($campaign->budget, 2) }}</td>
-                            <td class="px-5 py-4">{{ $campaign->leads_generated }}</td>
-                            <td class="px-5 py-4">{{ $campaign->conversions }}</td>
+                            <td class="px-5 py-4"><span class="inline-flex min-w-10 justify-center rounded-lg bg-primary/5 px-2.5 py-1 font-semibold text-primary">{{ number_format((int) $campaign->leads_generated) }}</span></td>
+                            <td class="px-5 py-4"><span class="inline-flex min-w-10 justify-center rounded-lg bg-success/10 px-2.5 py-1 font-semibold text-success">{{ number_format((int) $campaign->conversions) }}</span></td>
                             <td class="px-5 py-4">
                                 <span class="px-2.5 py-1 rounded-full text-xs font-semibold
                                     @if (($campaign->status ?? 'active') === 'active') bg-success/10 text-success

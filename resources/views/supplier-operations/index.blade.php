@@ -28,21 +28,40 @@
             <button class="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/15 transition hover:-translate-y-0.5 hover:bg-secondary">Save record</button>
         </form>
     </div>
-    <div class="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"><table class="w-full text-left text-sm"><thead class="bg-background text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-500"><tr><th class="px-5 py-3.5">Supplier</th><th class="px-5 py-3.5">Details</th><th class="px-5 py-3.5">Status</th><th class="px-5 py-3.5">Created</th></tr></thead><tbody class="divide-y divide-border">
+    <div class="overflow-hidden rounded-2xl border border-border bg-card shadow-sm"><table class="w-full text-left text-sm"><thead class="bg-background text-[11px] font-semibold uppercase tracking-[0.12em] text-gray-500"><tr><th class="px-5 py-3.5">Supplier</th><th class="px-5 py-3.5">Details</th><th class="px-5 py-3.5">Status</th><th class="px-5 py-3.5">Created</th>@if (in_array($module, ['contracts', 'availability', 'performance']))<th class="px-5 py-3.5 text-right">Actions</th>@endif</tr></thead><tbody class="divide-y divide-border">
         @forelse ($records as $record)
             <tr class="transition hover:bg-background/70"><td class="px-5 py-4"><div class="font-medium text-primary">{{ $record->supplier->name }}</div><div class="mt-0.5 text-xs text-gray-400">Supplier partner</div></td><td class="px-5 py-4">
                 @if ($module === 'contracts')
-                    {{ $record->contract_number }} · {{ $record->starts_on->format('d M Y') }}
+                    <div class="font-semibold text-primary">{{ $record->contract_number }}</div>
+                    <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                        <span class="rounded-full bg-success/10 px-2.5 py-1 font-semibold text-success">₱{{ number_format($record->value, 2) }}</span>
+                        <span>Starts {{ $record->starts_on->format('d M Y') }}</span>
+                        @if ($record->ends_on)<span>· Ends {{ $record->ends_on->format('d M Y') }}</span>@endif
+                    </div>
                 @elseif ($module === 'rates')
-                    {{ $record->service }} · PHP {{ number_format($record->rate, 2) }} {{ $record->unit }}
+                    <div class="font-semibold text-primary">{{ $record->service }}</div>
+                    <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                        <span class="rounded-full bg-success/10 px-2.5 py-1 font-semibold text-success">₱{{ number_format($record->rate, 2) }} {{ $record->unit }}</span>
+                        <span>From {{ $record->effective_from->format('d M Y') }}</span>
+                        @if ($record->effective_until)<span>· Until {{ $record->effective_until->format('d M Y') }}</span>@endif
+                    </div>
                 @elseif ($module === 'availability')
-                    {{ $record->available_on->format('d M Y') }} · Capacity {{ $record->capacity }}
+                    <div class="font-semibold text-primary">Availability · {{ $record->available_on->format('d M Y') }}</div>
+                    <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                        <span class="rounded-full bg-accent/10 px-2.5 py-1 font-semibold text-accent">{{ number_format($record->capacity) }} units available</span>
+                        <span>Supplier capacity</span>
+                    </div>
                 @else
-                    {{ $record->period }} · Score {{ $record->score }} · {{ $record->bookings_completed }} bookings
+                    <div class="font-semibold text-primary">Performance · {{ $record->period }}</div>
+                    <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                        <span class="rounded-full bg-success/10 px-2.5 py-1 font-semibold text-success">Score {{ number_format($record->score, 0) }}%</span>
+                        <span>{{ number_format($record->bookings_completed) }} bookings completed</span>
+                    </div>
+                    @if ($record->notes)<p class="mt-2 max-w-xl text-xs text-gray-500">{{ $record->notes }}</p>@endif
                 @endif
-            </td><td class="px-5 py-4"><span class="rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold capitalize text-accent">{{ $record->status ?? 'recorded' }}</span></td><td class="px-5 py-4 text-gray-500">{{ $record->created_at->diffForHumans() }}</td></tr>
+            </td><td class="px-5 py-4"><span class="rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold capitalize text-accent">{{ $record->status ?? 'recorded' }}</span></td><td class="px-5 py-4 text-gray-500">{{ $record->created_at->diffForHumans() }}</td>@if (in_array($module, ['contracts', 'availability', 'performance']))<td class="px-5 py-4 text-right"><form method="POST" action="{{ route('supplier-' . $module . '.destroy', $record) }}" onsubmit="return confirm('Remove this supplier {{ $module === 'contracts' ? 'contract' : ($module === 'availability' ? 'availability record' : 'performance record') }}? This action cannot be undone.')">@csrf @method('DELETE')<button type="submit" class="rounded-lg border border-error/20 px-3 py-1.5 text-xs font-semibold text-error transition hover:border-error/40 hover:bg-error/5">Remove</button></form></td>@endif</tr>
         @empty
-            <tr><td colspan="4" class="px-5 py-10 text-center text-gray-400">No records yet.</td></tr>
+            <tr><td colspan="{{ in_array($module, ['contracts', 'availability', 'performance']) ? 5 : 4 }}" class="px-5 py-10 text-center text-gray-400">No records yet.</td></tr>
         @endforelse
     </tbody></table><div class="border-t border-border px-5 py-4">{{ $records->links() }}</div></div>
 </div>

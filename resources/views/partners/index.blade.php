@@ -46,9 +46,9 @@
                     @forelse ($partners as $partner)
                         <tr class="transition hover:bg-background/70">
                             <td class="px-5 py-4 font-medium text-primary">{{ $partner->name }}</td>
-                            <td class="px-5 py-4 capitalize">{{ $partner->type }}</td>
-                            <td class="px-5 py-4">{{ $partner->region ?? '—' }}</td>
-                            <td class="px-5 py-4">{{ $partner->commission_rate ?? 0 }}%</td>
+                            <td class="px-5 py-4"><span class="inline-flex rounded-full bg-primary/5 px-2.5 py-1 text-xs font-semibold capitalize text-primary">{{ $partner->type }}</span></td>
+                            <td class="px-5 py-4"><div class="flex items-center gap-2 text-gray-600"><span class="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/10 text-xs text-accent">⌖</span><span>{{ $partner->region ?? 'Region not set' }}</span></div></td>
+                            <td class="px-5 py-4"><div class="min-w-24"><div class="mb-1 flex items-center justify-between gap-2"><span class="text-sm font-semibold text-primary">{{ number_format($partner->commission_rate ?? 0, 2) }}%</span><span class="text-[11px] text-gray-400">commission</span></div><div class="h-1.5 overflow-hidden rounded-full bg-gray-100"><div class="h-full rounded-full bg-secondary" style="width: {{ min($partner->commission_rate ?? 0, 100) }}%"></div></div></div></td>
                             <td class="px-5 py-4">
                                 <span class="px-2.5 py-1 rounded-full text-xs font-semibold
                                     @if (($partner->status ?? 'active') === 'active') bg-success/10 text-success

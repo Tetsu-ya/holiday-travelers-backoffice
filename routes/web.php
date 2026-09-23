@@ -14,6 +14,7 @@ use App\Http\Controllers\FinancialOperationsController;
 use App\Http\Controllers\DocumentOperationsController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 
 Route::get('/', fn () => redirect()->route('login'));
 
@@ -26,8 +27,12 @@ Route::middleware('guest')->group(function () {
     Route::get('auth/google/callback', [\App\Http\Controllers\Auth\LoginController::class, 'handleGoogleCallback'])->name('google.callback');
 });
 
-Route::middleware('auth')->group(function () {
-    Route::post('logout', [\App\Http\Controllers\Auth\LoginController::class, 'destroy'])->name('logout');
+Route::middleware(['auth', 'permission'])->group(function () {
+    // Logging out is safe to repeat and must still require an authenticated session,
+    // but should not fail when the page contains an expired CSRF token.
+    Route::post('logout', [\App\Http\Controllers\Auth\LoginController::class, 'destroy'])
+        ->withoutMiddleware([ValidateCsrfToken::class])
+        ->name('logout');
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -50,16 +55,20 @@ Route::middleware('auth')->group(function () {
     Route::get('staff-assignment', [TourPlanningController::class, 'assignment'])->name('staff-assignment.index');
     Route::post('staff-assignment', [TourPlanningController::class, 'storeAssignment'])->name('staff-assignment.store');
     Route::get('resource-calendar', [TourPlanningController::class, 'calendar'])->name('resource-calendar.index');
+    Route::get('payment-methods', [\App\Http\Controllers\PaymentMethodController::class, 'index'])->name('payment-methods.index');
 
     // Supplier operations
     Route::get('supplier-contracts', [SupplierOperationsController::class, 'contracts'])->name('supplier-contracts.index');
     Route::post('supplier-contracts', [SupplierOperationsController::class, 'storeContract'])->name('supplier-contracts.store');
+    Route::delete('supplier-contracts/{contract}', [SupplierOperationsController::class, 'destroyContract'])->name('supplier-contracts.destroy');
     Route::get('supplier-rates', [SupplierOperationsController::class, 'rates'])->name('supplier-rates.index');
     Route::post('supplier-rates', [SupplierOperationsController::class, 'storeRate'])->name('supplier-rates.store');
     Route::get('supplier-availability', [SupplierOperationsController::class, 'availability'])->name('supplier-availability.index');
     Route::post('supplier-availability', [SupplierOperationsController::class, 'storeAvailability'])->name('supplier-availability.store');
+    Route::delete('supplier-availability/{availability}', [SupplierOperationsController::class, 'destroyAvailability'])->name('supplier-availability.destroy');
     Route::get('supplier-performance', [SupplierOperationsController::class, 'performance'])->name('supplier-performance.index');
     Route::post('supplier-performance', [SupplierOperationsController::class, 'storePerformance'])->name('supplier-performance.store');
+    Route::delete('supplier-performance/{performance}', [SupplierOperationsController::class, 'destroyPerformance'])->name('supplier-performance.destroy');
 
     // Marketing operations
     Route::get('promotions', [MarketingOperationsController::class, 'promotions'])->name('promotions.index');
@@ -74,6 +83,8 @@ Route::middleware('auth')->group(function () {
     Route::get('expenses', [FinancialOperationsController::class, 'expenses'])->name('expenses.index');
     Route::post('expenses', [FinancialOperationsController::class, 'storeExpense'])->name('expenses.store');
     Route::get('commissions', [FinancialOperationsController::class, 'commissions'])->name('commissions.index');
+    Route::post('commissions/{commission}/approve', [FinancialOperationsController::class, 'approveCommission'])->name('commissions.approve');
+    Route::post('commissions/{commission}/mark-paid', [FinancialOperationsController::class, 'markCommissionPaid'])->name('commissions.mark-paid');
     Route::get('analytics-dashboard', [FinancialOperationsController::class, 'analytics'])->name('analytics-dashboard.index');
 
     // Document and visa assistance
@@ -91,6 +102,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('packages', \App\Http\Controllers\TourPackageController::class);
     Route::get('bookings/{booking}/finance', [\App\Http\Controllers\BookingController::class, 'finance'])->name('bookings.finance');
     Route::post('bookings/{booking}/finance/payment', [\App\Http\Controllers\BookingController::class, 'recordPayment'])->name('bookings.finance.payment');
+    Route::get('payments/{payment}/receipt', [\App\Http\Controllers\BookingController::class, 'receipt'])->name('payments.receipt');
+    Route::delete('payments/{payment}', [\App\Http\Controllers\BookingController::class, 'destroyPayment'])->name('payments.destroy');
     Route::post('bookings/{booking}/finance/invoice', [\App\Http\Controllers\BookingController::class, 'generateInvoice'])->name('bookings.finance.invoice');
     Route::resource('bookings', \App\Http\Controllers\BookingController::class);
 

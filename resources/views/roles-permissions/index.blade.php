@@ -19,7 +19,7 @@
 					<tr>
 						<th class="px-5 py-3">Permission</th>
 						@foreach($roles as $role)
-							<th class="px-5 py-3 capitalize">{{ $role }}</th>
+							<th class="px-5 py-3"><span class="inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold capitalize {{ match ($role) { 'admin' => 'bg-secondary/10 text-secondary', 'manager' => 'bg-accent/10 text-accent', 'agent' => 'bg-blue-100 text-blue-700', default => 'bg-gray-100 text-gray-600' } }}">{{ $role }}</span></th>
 						@endforeach
 					</tr>
 				</thead>

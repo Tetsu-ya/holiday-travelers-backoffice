@@ -12,7 +12,7 @@
             <div>
                 <label for="status" class="block text-sm font-medium mb-1">Booking status</label>
                 <select id="status" name="status" class="w-full rounded-lg border-border" required>
-                    @foreach (['pending', 'confirmed', 'cancelled', 'completed'] as $status)
+                    @foreach (['pending', 'confirmed', 'cancelled', 'completed', 'refunded'] as $status)
                         <option value="{{ $status }}" @selected(old('status', $booking->status) === $status)>{{ ucfirst($status) }}</option>
                     @endforeach
                 </select>
@@ -21,7 +21,7 @@
             <div>
                 <label for="payment_status" class="block text-sm font-medium mb-1">Payment status</label>
                 <select id="payment_status" name="payment_status" class="w-full rounded-lg border-border" required>
-                    @foreach (['unpaid', 'partial', 'paid', 'refunded'] as $paymentStatus)
+                    @foreach (['unpaid', 'partial', 'paid', 'refunded', 'cancelled'] as $paymentStatus)
                         <option value="{{ $paymentStatus }}" @selected(old('payment_status', $booking->payment_status) === $paymentStatus)>{{ ucfirst($paymentStatus) }}</option>
                     @endforeach
                 </select>

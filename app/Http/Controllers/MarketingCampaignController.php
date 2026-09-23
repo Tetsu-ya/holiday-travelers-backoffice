@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\MarketingCampaign;
-use App\Models\Lead;
 use Illuminate\Http\Request;
 
 class MarketingCampaignController extends Controller
@@ -11,8 +10,8 @@ class MarketingCampaignController extends Controller
     public function index()
     {
         $campaigns = MarketingCampaign::latest()->paginate(15);
-        $totalLeads = Lead::whereNotNull('marketing_campaign_id')->count();
-        $convertedLeads = Lead::whereNotNull('marketing_campaign_id')->where('status', 'converted')->count();
+        $totalLeads = (int) MarketingCampaign::sum('leads_generated');
+        $convertedLeads = (int) MarketingCampaign::sum('conversions');
         $campaignStats = [
             'active' => MarketingCampaign::where('status', 'active')->count(),
             'budget_used' => MarketingCampaign::sum('actual_spend'),
@@ -50,7 +49,20 @@ class MarketingCampaignController extends Controller
 
     public function update(Request $request, MarketingCampaign $campaign)
     {
-        $campaign->update($request->all());
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'channel' => 'required|in:email,social_media,referral,ads,events',
+            'tour_package_id' => 'nullable|exists:tour_packages,id',
+            'budget' => 'nullable|numeric|min:0',
+            'actual_spend' => 'nullable|numeric|min:0',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'status' => 'required|in:planned,active,paused,completed',
+            'leads_generated' => 'nullable|integer|min:0',
+            'conversions' => 'nullable|integer|min:0',
+        ]);
+
+        $campaign->update($data);
         return redirect()->route('campaigns.index')->with('success', 'Campaign updated.');
     }
 

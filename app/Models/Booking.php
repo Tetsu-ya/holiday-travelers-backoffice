@@ -12,12 +12,14 @@ class Booking extends Model
     protected $fillable = [
         'reference_no', 'tour_package_id', 'business_partner_id',
         'customer_name', 'customer_email', 'customer_phone', 'pax',
-        'travel_date', 'total_amount', 'payment_status', 'status',
+        'travel_date', 'travel_time', 'total_amount', 'discount_code_id', 'subtotal_amount', 'discount_amount', 'payment_status', 'status',
     ];
 
     protected $casts = [
         'travel_date' => 'date',
         'total_amount' => 'decimal:2',
+        'subtotal_amount' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
     ];
 
     public function tourPackage()
@@ -28,6 +30,11 @@ class Booking extends Model
     public function businessPartner()
     {
         return $this->belongsTo(BusinessPartner::class);
+    }
+
+    public function discountCode()
+    {
+        return $this->belongsTo(DiscountCode::class);
     }
 
     public function payments()

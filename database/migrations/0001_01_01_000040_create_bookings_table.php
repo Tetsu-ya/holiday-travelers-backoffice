@@ -18,8 +18,8 @@ return new class extends Migration {
             $table->integer('pax')->default(1);
             $table->date('travel_date');
             $table->decimal('total_amount', 12, 2);
-            $table->enum('payment_status', ['unpaid', 'partial', 'paid', 'refunded'])->default('unpaid');
-            $table->enum('status', ['pending', 'confirmed', 'cancelled', 'completed'])->default('pending');
+            $table->enum('payment_status', ['unpaid', 'partial', 'paid', 'refunded', 'cancelled'])->default('unpaid');
+            $table->enum('status', ['pending', 'confirmed', 'cancelled', 'completed', 'refunded'])->default('pending');
             $table->timestamps();
         });
     }

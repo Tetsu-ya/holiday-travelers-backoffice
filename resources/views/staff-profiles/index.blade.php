@@ -23,8 +23,8 @@
         </div>
 
         <form method="GET" class="flex flex-col gap-3 border-b border-border bg-background/50 p-4 sm:flex-row">
-            <input type="search" name="search" value="{{ $search }}" placeholder="Search name, email, or department" class="min-w-0 flex-1 rounded-xl border border-border bg-card px-3 py-2.5 text-sm text-primary focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20">
-            <button type="submit" class="rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white">Search</button>
+            <input type="search" name="search" value="{{ $search }}" placeholder="Search name, email, or department" class="min-w-0 flex-1 rounded-xl border border-border bg-card px-3 py-2.5 text-sm text-primary transition-all duration-200 focus:-translate-y-0.5 focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10">
+            <button type="submit" class="group inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-primary/10 transition-all duration-200 hover:-translate-y-0.5 hover:bg-secondary hover:shadow-lg active:translate-y-0 active:scale-95"><span>Search</span><span aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-1">→</span></button>
             @if ($search)
                 <a href="{{ route('staff-profiles.index') }}" class="rounded-lg border border-border px-4 py-2 text-center text-sm">Clear</a>
             @endif
@@ -37,8 +37,8 @@
                     @forelse ($staff as $member)
                         <tr class="transition hover:bg-background/70">
                             <td class="px-5 py-3"><div class="font-medium text-primary">{{ $member->name }}</div><div class="text-xs text-gray-500">{{ $member->email }}</div></td>
-                            <td class="px-5 py-3 capitalize">{{ $member->role ?? 'staff' }}</td>
-                            <td class="px-5 py-3">{{ $member->department ?: '—' }}</td>
+                            <td class="px-5 py-3"><span class="inline-flex rounded-full px-2.5 py-1 text-xs font-semibold capitalize {{ match ($member->role ?? 'staff') { 'admin' => 'bg-secondary/10 text-secondary', 'manager' => 'bg-accent/10 text-accent', 'agent' => 'bg-blue-100 text-blue-700', default => 'bg-gray-100 text-gray-600' } }}">{{ $member->role ?? 'staff' }}</span></td>
+                            <td class="px-5 py-3"><span class="inline-flex items-center gap-2 text-gray-600"><span class="h-2 w-2 rounded-full bg-accent"></span>{{ $member->department ?: 'Department not assigned' }}</span></td>
                             <td class="px-5 py-3"><span class="rounded-full px-2.5 py-1 text-xs font-semibold {{ ($member->status ?? 'active') === 'active' ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-600' }}">{{ ucfirst($member->status ?? 'active') }}</span></td>
                             <td class="px-5 py-3"><div class="flex items-center gap-3"><a href="{{ route('staff-profiles.show', $member) }}" class="text-xs font-medium text-primary">View</a><a href="{{ route('staff-profiles.edit', $member) }}" class="text-xs font-medium text-secondary">Edit</a></div></td>
                         </tr>

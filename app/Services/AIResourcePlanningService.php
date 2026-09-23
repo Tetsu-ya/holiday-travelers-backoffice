@@ -42,7 +42,10 @@ class AIResourcePlanningService
         $weights = range(1, max(1, $history->count()));
         $weightedAverage = $history->isEmpty()
             ? 0
-            : collect($history)->values()->sum(fn ($row, $index) => $row['pax'] * $weights[$index]) / array_sum($weights);
+            : collect($history)->values()->reduce(
+                fn ($total, $row, $index) => $total + ($row['pax'] * $weights[$index]),
+                0
+            ) / array_sum($weights);
         $firstPax = $history->first()['pax'] ?? 0;
         $lastPax = $history->last()['pax'] ?? 0;
         $trend = $firstPax > 0 ? (($lastPax - $firstPax) / $firstPax) : 0;

@@ -13,7 +13,6 @@ class SupplierController extends Controller
         $supplierStats = [
             'total' => Supplier::count(),
             'active' => Supplier::where('status', 'active')->count(),
-            'needs_review' => Supplier::whereIn('status', ['inactive', 'blacklisted'])->count(),
             'average_reliability' => (Supplier::avg('reliability_rating') ?? 0) * 20,
         ];
 
@@ -35,6 +34,7 @@ class SupplierController extends Controller
             'phone' => 'nullable|string|max:50',
             'location' => 'nullable|string|max:255',
             'base_rate' => 'nullable|numeric|min:0',
+            'reliability_rating' => 'nullable|numeric|min:0|max:5',
         ]);
 
         Supplier::create($data);
@@ -61,6 +61,7 @@ class SupplierController extends Controller
             'phone' => 'nullable|string|max:50',
             'location' => 'nullable|string|max:255',
             'base_rate' => 'nullable|numeric|min:0',
+            'reliability_rating' => 'nullable|numeric|min:0|max:5',
         ]);
 
         $supplier->update($data);

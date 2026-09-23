@@ -15,16 +15,18 @@
                 <th class="px-5 py-3">Type</th>
                 <th class="px-5 py-3">Price</th>
                 <th class="px-5 py-3">Status</th>
+                <th class="px-5 py-3">Actions</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-border">
             @forelse ($packages as $package)
                 <tr class="transition hover:bg-background/70">
                     <td class="px-5 py-4 font-medium text-primary">{{ $package->name }}</td>
-                    <td class="px-5 py-4">{{ $package->destination }}</td>
-                    <td class="px-5 py-4 capitalize">{{ $package->type }}</td>
-                    <td class="px-5 py-4">₱{{ number_format($package->price, 2) }}</td>
+                    <td class="px-5 py-4"><div class="flex items-center gap-2 text-gray-600"><span class="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/10 text-xs text-accent">⌖</span><span>{{ $package->destination }}</span></div></td>
+                    <td class="px-5 py-4"><span class="inline-flex rounded-full {{ $package->type === 'international' ? 'bg-secondary/10 text-secondary' : 'bg-primary/5 text-primary' }} px-2.5 py-1 text-xs font-semibold capitalize">{{ $package->type }}</span></td>
+                    <td class="px-5 py-4"><span class="font-semibold text-primary">₱{{ number_format($package->price, 2) }}</span><span class="mt-0.5 block text-[11px] text-gray-400">per traveler</span></td>
                     <td class="px-5 py-4"><span class="rounded-full bg-success/10 px-2.5 py-1 text-xs font-semibold capitalize text-success">{{ $package->status }}</span></td>
+                    <td class="px-5 py-4"><a href="{{ route('packages.edit', $package) }}" class="text-xs font-medium text-secondary">Edit</a></td>
                 </tr>
             @empty
                 <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400">No tour packages yet.</td></tr>

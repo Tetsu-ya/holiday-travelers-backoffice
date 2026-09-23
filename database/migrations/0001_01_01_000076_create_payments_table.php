@@ -14,7 +14,7 @@ return new class extends Migration
             $table->decimal('amount', 12, 2);
             $table->enum('payment_method', ['cash', 'card', 'bank_transfer', 'wallet', 'other'])->default('bank_transfer');
             $table->string('reference_number')->nullable();
-            $table->enum('status', ['pending', 'paid', 'partial', 'refunded'])->default('pending');
+            $table->enum('status', ['pending', 'paid', 'partial', 'refunded', 'cancelled'])->default('pending');
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });

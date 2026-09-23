@@ -9,8 +9,7 @@
             <h1 class="text-2xl font-semibold">{{ $campaign->name }}</h1>
         </div>
         <div class="flex items-center gap-3">
-            <a href="{{ route('campaigns.index') }}" class="px-4 py-2 rounded-lg border border-border bg-white">Back</a>
-            <a href="{{ route('campaigns.edit', $campaign) }}" class="px-4 py-2 rounded-lg bg-primary text-white">Edit</a>
+            <a href="{{ route('campaigns.index') }}" class="group inline-flex items-center gap-2 rounded-xl border border-border bg-white px-4 py-2.5 text-sm font-semibold text-primary shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-secondary hover:text-secondary hover:shadow-md active:translate-y-0 active:scale-95 dark:bg-gray-800 dark:text-gray-100"><span class="transition-transform duration-200 group-hover:-translate-x-1">←</span><span>Back</span></a>
         </div>
     </div>
 

@@ -27,6 +27,13 @@ class SupplierOperationsController extends Controller
         return back()->with('success', 'Supplier contract added.');
     }
 
+    public function destroyContract(SupplierContract $contract)
+    {
+        $contract->delete();
+
+        return back()->with('success', 'Supplier contract removed.');
+    }
+
     public function rates()
     {
         return view('supplier-operations.index', ['module' => 'rates', 'suppliers' => $this->suppliers(), 'records' => SupplierRate::with('supplier')->latest()->paginate(15)]);
@@ -49,6 +56,13 @@ class SupplierOperationsController extends Controller
         return back()->with('success', 'Supplier availability added.');
     }
 
+    public function destroyAvailability(SupplierAvailability $availability)
+    {
+        $availability->delete();
+
+        return back()->with('success', 'Supplier availability removed.');
+    }
+
     public function performance()
     {
         return view('supplier-operations.index', ['module' => 'performance', 'suppliers' => $this->suppliers(), 'records' => SupplierPerformance::with('supplier')->latest()->paginate(15)]);
@@ -58,5 +72,12 @@ class SupplierOperationsController extends Controller
     {
         SupplierPerformance::create($request->validate(['supplier_id' => 'required|exists:suppliers,id', 'period' => 'required|string|max:40', 'score' => 'required|numeric|min:0|max:100', 'bookings_completed' => 'required|integer|min:0', 'notes' => 'nullable|string']));
         return back()->with('success', 'Supplier performance recorded.');
+    }
+
+    public function destroyPerformance(SupplierPerformance $performance)
+    {
+        $performance->delete();
+
+        return back()->with('success', 'Supplier performance removed.');
     }
 }

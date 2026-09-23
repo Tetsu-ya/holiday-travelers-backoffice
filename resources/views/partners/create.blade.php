@@ -42,8 +42,8 @@
         </div>
 
         <div class="flex gap-3">
-            <button type="submit" class="px-4 py-2 rounded-lg bg-primary text-white">Save partner</button>
-            <a href="{{ route('partners.index') }}" class="px-4 py-2 rounded-lg border border-border">Cancel</a>
+            <button type="submit" class="group inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/15 transition-all duration-200 hover:-translate-y-0.5 hover:bg-secondary hover:shadow-xl active:translate-y-0 active:scale-95"><span>Save partner</span><span class="transition-transform duration-200 group-hover:translate-x-1">→</span></button>
+            <a href="{{ route('partners.index') }}" class="group inline-flex items-center gap-2 rounded-xl border border-border px-4 py-2.5 text-sm font-semibold text-primary transition-all duration-200 hover:-translate-y-0.5 hover:border-secondary hover:text-secondary active:translate-y-0 active:scale-95"><span class="transition-transform duration-200 group-hover:-translate-x-1">←</span><span>Cancel</span></a>
         </div>
     </form>
 </div>

@@ -32,7 +32,7 @@ class TourPlanningController extends Controller
 
     public function availability()
     {
-        $packages = TourPackage::withCount(['bookings as booked_pax' => fn ($query) => $query->whereIn('status', ['pending', 'confirmed'])])->latest()->paginate(15);
+        $packages = TourPackage::withSum(['bookings as booked_pax' => fn ($query) => $query->whereIn('status', ['pending', 'confirmed'])], 'pax')->latest()->paginate(15);
         return view('tour-planning.index', ['module' => 'availability', 'packages' => $packages]);
     }
 

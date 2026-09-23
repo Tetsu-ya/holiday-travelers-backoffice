@@ -25,6 +25,11 @@
                     <div><dt class="text-sm text-gray-500">Phone</dt><dd>{{ $booking->customer_phone ?: 'Not provided' }}</dd></div>
                     <div><dt class="text-sm text-gray-500">Passengers</dt><dd>{{ $booking->pax }}</dd></div>
                     <div><dt class="text-sm text-gray-500">Travel date</dt><dd>{{ $booking->travel_date?->format('M d, Y') ?? 'Not set' }}</dd></div>
+                    <div><dt class="text-sm text-gray-500">Travel time</dt><dd>{{ $booking->travel_time ? \Illuminate\Support\Carbon::parse($booking->travel_time)->format('g:i A') : 'Not set' }}</dd></div>
+                    @if ($booking->discountCode)
+                        <div><dt class="text-sm text-gray-500">Subtotal</dt><dd>PHP {{ number_format((float) ($booking->subtotal_amount ?? $booking->total_amount), 2) }}</dd></div>
+                        <div><dt class="text-sm text-gray-500">Discount</dt><dd class="font-medium text-success">{{ $booking->discountCode->code }} · PHP {{ number_format((float) $booking->discount_amount, 2) }}</dd></div>
+                    @endif
                     <div><dt class="text-sm text-gray-500">Total amount</dt><dd>PHP {{ number_format((float) $booking->total_amount, 2) }}</dd></div>
                     <div><dt class="text-sm text-gray-500">Business partner</dt><dd>{{ $booking->businessPartner->name ?? 'Direct booking' }}</dd></div>
                     <div><dt class="text-sm text-gray-500">Booking status</dt><dd class="capitalize">{{ $booking->status }}</dd></div>
@@ -89,6 +94,8 @@
                 @if($invoice)
                     <div class="space-y-3 text-sm">
                         <div class="flex items-center justify-between"><span class="text-gray-500">Invoice no.</span><span class="font-medium">{{ $invoice->invoice_number }}</span></div>
+                        <div class="flex items-center justify-between"><span class="text-gray-500">Issue date</span><span>{{ $invoice->issued_at?->format('M d, Y') ?? 'Not set' }}</span></div>
+                        <div class="flex items-center justify-between"><span class="text-gray-500">Due date</span><span>{{ $invoice->due_at?->format('M d, Y') ?? 'Not set' }}</span></div>
                         <div class="flex items-center justify-between"><span class="text-gray-500">Subtotal</span><span>PHP {{ number_format((float) $invoice->subtotal, 2) }}</span></div>
                         <div class="flex items-center justify-between"><span class="text-gray-500">Tax</span><span>PHP {{ number_format((float) $invoice->tax, 2) }}</span></div>
                         <div class="flex items-center justify-between"><span class="text-gray-500">Total</span><span class="font-semibold">PHP {{ number_format((float) $invoice->total, 2) }}</span></div>
@@ -99,36 +106,6 @@
                 @endif
             </div>
 
-            <div class="bg-card rounded-xl border border-border shadow-sm p-6">
-                <h2 class="mb-4 text-lg font-semibold">Partner commission</h2>
-                @php $commission = $booking->partnerCommissions->first(); @endphp
-                @if($commission)
-                    <div class="space-y-3 text-sm">
-                        <div class="flex items-center justify-between"><span class="text-gray-500">Partner</span><span class="font-medium">{{ $commission->partner->name ?? 'N/A' }}</span></div>
-                        <div class="flex items-center justify-between"><span class="text-gray-500">Rate</span><span>{{ number_format((float) $commission->commission_rate, 2) }}%</span></div>
-                        <div class="flex items-center justify-between"><span class="text-gray-500">Commission</span><span>PHP {{ number_format((float) $commission->commission_amount, 2) }}</span></div>
-                        <div class="flex items-center justify-between"><span class="text-gray-500">Status</span><span class="capitalize">{{ $commission->status }}</span></div>
-                    </div>
-                @else
-                    <p class="text-sm text-gray-500">No partner commission assigned.</p>
-                @endif
-            </div>
-
-            <div class="bg-card rounded-xl border border-border shadow-sm p-6">
-                <h2 class="mb-4 text-lg font-semibold">Status timeline</h2>
-                @if($booking->statusHistories->isEmpty())
-                    <p class="text-sm text-gray-500">No status changes recorded.</p>
-                @else
-                    <div class="space-y-3">
-                        @foreach($booking->statusHistories as $history)
-                            <div class="border-l-2 border-primary pl-3">
-                                <div class="text-sm font-medium">{{ ucfirst($history->to_status) }}</div>
-                                <div class="text-xs text-gray-500">{{ $history->created_at->format('M d, Y H:i') }}</div>
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
-            </div>
         </div>
     </div>
 </div>

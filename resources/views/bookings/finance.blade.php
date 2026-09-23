@@ -8,7 +8,7 @@
             <p class="text-sm text-gray-500">Booking finance</p>
             <h1 class="text-2xl font-semibold">{{ $booking->reference_no }}</h1>
         </div>
-        <a href="{{ route('bookings.show', $booking) }}" class="px-4 py-2 rounded-lg border border-border bg-white">Back to booking</a>
+        <a href="{{ route('payment-methods.index') }}" class="group inline-flex items-center gap-2 rounded-xl border border-border bg-white px-4 py-2.5 text-sm font-semibold text-primary transition-all duration-200 hover:-translate-y-0.5 hover:border-secondary hover:text-secondary active:translate-y-0 active:scale-95"><span class="transition-transform duration-200 group-hover:-translate-x-1">←</span><span>Back</span></a>
     </div>
 
     <div class="grid gap-6 xl:grid-cols-2">
@@ -41,9 +41,10 @@
                         <option value="partial">Partial</option>
                         <option value="pending">Pending</option>
                         <option value="refunded">Refunded</option>
+                        <option value="cancelled">Cancelled</option>
                     </select>
                 </div>
-                <button type="submit" class="w-full rounded-lg bg-primary px-4 py-2 font-medium text-white">Save payment</button>
+                <button type="submit" class="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/15 transition-all duration-200 hover:-translate-y-0.5 hover:bg-secondary hover:shadow-xl active:translate-y-0 active:scale-95"><span>Save payment</span><span class="transition-transform duration-200 group-hover:translate-x-1">→</span></button>
             </form>
         </div>
 
@@ -84,7 +85,7 @@
                         <option value="overdue">Overdue</option>
                     </select>
                 </div>
-                <button type="submit" class="w-full rounded-lg bg-secondary px-4 py-2 font-medium text-white">Generate invoice</button>
+                <button type="submit" class="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-secondary/15 transition-all duration-200 hover:-translate-y-0.5 hover:bg-primary hover:shadow-xl active:translate-y-0 active:scale-95"><span>Generate invoice</span><span class="transition-transform duration-200 group-hover:translate-x-1">→</span></button>
             </form>
         </div>
     </div>
@@ -97,15 +98,21 @@
             @else
                 <div class="space-y-3">
                     @foreach($booking->payments as $payment)
-                        <div class="flex items-center justify-between rounded-lg border border-border bg-gray-50 p-3">
+                                <div class="flex items-center justify-between rounded-lg border border-border bg-gray-50 p-3">
                             <div>
                                 <div class="font-medium">{{ ucfirst(str_replace('_', ' ', $payment->payment_method)) }}</div>
                                 <div class="text-xs text-gray-500">{{ $payment->reference_number ?: 'No reference' }}</div>
                             </div>
-                            <div class="text-right">
-                                <div class="font-medium">PHP {{ number_format((float) $payment->amount, 2) }}</div>
-                                <div class="text-xs capitalize text-gray-500">{{ $payment->status }}</div>
-                            </div>
+                                <div class="text-right">
+                                    <div class="font-medium">PHP {{ number_format((float) $payment->amount, 2) }}</div>
+                                    <div class="text-xs capitalize text-gray-500">{{ $payment->status }}</div>
+                                    <a href="{{ route('payments.receipt', $payment) }}" class="no-print mt-1 inline-block text-xs font-semibold text-secondary hover:text-primary">View receipt</a>
+                                    <form method="POST" action="{{ route('payments.destroy', $payment) }}" class="no-print mt-1" onsubmit="return confirm('Remove this payment of PHP {{ number_format((float) $payment->amount, 2) }}? The booking balance will be recalculated.')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-xs font-semibold text-error transition hover:text-red-700">Remove</button>
+                                    </form>
+                                </div>
                         </div>
                     @endforeach
                 </div>
@@ -118,6 +125,8 @@
             @if($invoice)
                 <div class="space-y-3 text-sm">
                     <div class="flex items-center justify-between"><span class="text-gray-500">Invoice number</span><span class="font-medium">{{ $invoice->invoice_number }}</span></div>
+                    <div class="flex items-center justify-between"><span class="text-gray-500">Issue date</span><span>{{ $invoice->issued_at?->format('M d, Y') ?? 'Not set' }}</span></div>
+                    <div class="flex items-center justify-between"><span class="text-gray-500">Due date</span><span>{{ $invoice->due_at?->format('M d, Y') ?? 'Not set' }}</span></div>
                     <div class="flex items-center justify-between"><span class="text-gray-500">Subtotal</span><span>PHP {{ number_format((float) $invoice->subtotal, 2) }}</span></div>
                     <div class="flex items-center justify-between"><span class="text-gray-500">Tax</span><span>PHP {{ number_format((float) $invoice->tax, 2) }}</span></div>
                     <div class="flex items-center justify-between"><span class="text-gray-500">Total</span><span class="font-semibold">PHP {{ number_format((float) $invoice->total, 2) }}</span></div>

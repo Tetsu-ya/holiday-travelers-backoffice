@@ -8,14 +8,15 @@ use App\Models\Expense;
 use App\Models\MarketingCampaign;
 use App\Models\PartnerCommission;
 use App\Models\Payment;
+use App\Support\Revenue;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
     public function index()
     {
-        $revenue = Booking::whereIn('status', ['confirmed', 'completed'])->sum('total_amount');
-        $refunds = Payment::where('status', 'refunded')->sum('amount');
+        $revenue = Revenue::collected();
+        $refunds = Revenue::refunded();
         $partnersPaid = BusinessPartner::query()
             ->join('partner_commissions', 'business_partners.id', '=', 'partner_commissions.partner_id')
             ->where('partner_commissions.status', 'paid')
@@ -25,12 +26,7 @@ class ReportController extends Controller
             ? (($revenue - $partnersPaid - $campaignSpend) / $revenue) * 100
             : 0;
 
-        $monthlyRevenue = collect(range(1, 12))->mapWithKeys(function (int $month) {
-            return [$month => Booking::whereYear('travel_date', now()->year)
-                ->whereMonth('travel_date', $month)
-                ->whereIn('status', ['confirmed', 'completed'])
-                ->sum('total_amount')];
-        });
+        $monthlyRevenue = Revenue::monthlyCollected();
 
         $channelConversions = MarketingCampaign::select('channel')
             ->selectRaw('SUM(conversions) as conversions')

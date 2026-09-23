@@ -93,6 +93,7 @@
                                 ['Staff Assignment', 'staff-assignment.index'],
                                 ['Resource Calendar', 'resource-calendar.index'],
                                 ['AI Resource Planning', 'ai-planning.index'],
+                                ['Payment Methods', 'payment-methods.index'],
                             ],
                         ],
                         [
@@ -199,8 +200,12 @@
             <header class="sticky top-0 z-20 flex items-center justify-between border-b border-border bg-card/95 px-4 py-4 shadow-sm backdrop-blur-md dark:bg-gray-800/95 sm:px-6 lg:px-8">
                 <div class="flex min-w-0 items-center gap-3">
                     <button type="button" id="sidebar-toggle" aria-label="Open navigation" title="Open navigation"
-                            class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border text-primary transition hover:bg-gray-50 lg:hidden">
-                        <span aria-hidden="true">☰</span>
+                            class="hidden h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-primary text-white shadow-lg shadow-primary/25 transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 active:scale-95">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+                            <line x1="6" y1="8" x2="18" y2="8" />
+                            <line x1="6" y1="12" x2="18" y2="12" />
+                            <line x1="6" y1="16" x2="18" y2="16" />
+                        </svg>
                     </button>
                     <div class="min-w-0">
                     <p class="mb-1 hidden text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400 sm:block">Holiday Travelers / Back Office</p>

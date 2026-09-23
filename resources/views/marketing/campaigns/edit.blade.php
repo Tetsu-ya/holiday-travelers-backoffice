@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="max-w-3xl bg-card rounded-xl border border-border shadow-sm p-6">
-    <form method="POST" action="{{ route('campaigns.update', $campaign) }}" class="space-y-5">
+    <form method="POST" action="{{ route('campaigns.update', $campaign) }}" class="space-y-5" id="campaign-edit-form">
         @csrf
         @method('PUT')
 
@@ -39,11 +39,11 @@
             </div>
             <div>
                 <label class="mb-1 block text-sm font-medium text-gray-700">Start date</label>
-                <input type="date" name="start_date" value="{{ $campaign->start_date }}" class="w-full rounded-lg border border-border px-3 py-2">
+                <input type="date" name="start_date" required value="{{ old('start_date', $campaign->start_date?->format('Y-m-d')) }}" class="w-full rounded-lg border border-border px-3 py-2">
             </div>
             <div>
                 <label class="mb-1 block text-sm font-medium text-gray-700">End date</label>
-                <input type="date" name="end_date" value="{{ $campaign->end_date }}" class="w-full rounded-lg border border-border px-3 py-2">
+                <input type="date" name="end_date" required value="{{ old('end_date', $campaign->end_date?->format('Y-m-d')) }}" class="w-full rounded-lg border border-border px-3 py-2">
             </div>
             <div>
                 <label class="mb-1 block text-sm font-medium text-gray-700">Status</label>
@@ -64,9 +64,18 @@
         </div>
 
         <div class="flex gap-3">
-            <button type="submit" class="px-4 py-2 rounded-lg bg-primary text-white">Update campaign</button>
-            <a href="{{ route('campaigns.index') }}" class="px-4 py-2 rounded-lg border border-border">Cancel</a>
+            <button type="submit" class="campaign-submit group inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-secondary hover:shadow-xl active:translate-y-0 active:scale-95"><span class="campaign-submit-label">Update campaign</span><span aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-1">→</span></button>
+            <a href="{{ route('campaigns.index') }}" class="group inline-flex items-center gap-2 rounded-xl border border-border px-5 py-2.5 text-sm font-semibold text-primary transition-all duration-200 hover:-translate-y-0.5 hover:border-secondary hover:text-secondary active:translate-y-0 active:scale-95"><span class="transition-transform duration-200 group-hover:-translate-x-1">←</span><span>Cancel</span></a>
         </div>
     </form>
 </div>
+<script>
+    document.getElementById('campaign-edit-form')?.addEventListener('submit', function () {
+        const button = this.querySelector('.campaign-submit');
+        if (!button) return;
+        button.disabled = true;
+        button.classList.add('is-loading');
+        button.querySelector('.campaign-submit-label').textContent = 'Updating campaign...';
+    });
+</script>
 @endsection

@@ -1,7 +1,7 @@
 <div class="grid gap-5 md:grid-cols-2">
     <div class="md:col-span-2">
         <label for="tour_package_id" class="block text-sm font-medium mb-1">Tour package</label>
-        <select id="tour_package_id" name="tour_package_id" class="w-full rounded-lg border-border" required>
+        <select id="tour_package_id" name="tour_package_id" class="w-full rounded-xl border border-border bg-background px-3 py-2.5 transition focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10" required>
             <option value="">Select a package</option>
             @foreach ($packages as $package)
                 <option value="{{ $package->id }}" @selected((string) old('tour_package_id', $booking->tour_package_id ?? '') === (string) $package->id)>
@@ -14,12 +14,12 @@
 
     <div>
         <label for="customer_name" class="block text-sm font-medium mb-1">Customer name</label>
-        <input id="customer_name" name="customer_name" value="{{ old('customer_name', $booking->customer_name ?? '') }}" class="w-full rounded-lg border-border" required>
+        <input id="customer_name" name="customer_name" value="{{ old('customer_name', $booking->customer_name ?? '') }}" class="w-full rounded-xl border border-border bg-background px-3 py-2.5 transition focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10" required>
         @error('customer_name')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>
         <label for="business_partner_id" class="block text-sm font-medium mb-1">Business partner</label>
-        <select id="business_partner_id" name="business_partner_id" class="w-full rounded-lg border-border">
+        <select id="business_partner_id" name="business_partner_id" class="w-full rounded-xl border border-border bg-background px-3 py-2.5 transition focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10">
             <option value="">Direct booking</option>
             @foreach ($partners as $partner)
                 <option value="{{ $partner->id }}" @selected((string) old('business_partner_id', $booking->business_partner_id ?? '') === (string) $partner->id)>{{ $partner->name }}</option>
@@ -29,27 +29,40 @@
     </div>
     <div>
         <label for="customer_email" class="block text-sm font-medium mb-1">Email</label>
-        <input id="customer_email" type="email" name="customer_email" value="{{ old('customer_email', $booking->customer_email ?? '') }}" class="w-full rounded-lg border-border">
+        <input id="customer_email" type="email" name="customer_email" value="{{ old('customer_email', $booking->customer_email ?? '') }}" class="w-full rounded-xl border border-border bg-background px-3 py-2.5 transition focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10">
         @error('customer_email')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>
         <label for="customer_phone" class="block text-sm font-medium mb-1">Phone</label>
-        <input id="customer_phone" name="customer_phone" value="{{ old('customer_phone', $booking->customer_phone ?? '') }}" class="w-full rounded-lg border-border">
+        <input id="customer_phone" name="customer_phone" value="{{ old('customer_phone', $booking->customer_phone ?? '') }}" class="w-full rounded-xl border border-border bg-background px-3 py-2.5 transition focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10">
         @error('customer_phone')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>
         <label for="pax" class="block text-sm font-medium mb-1">Passengers</label>
-        <input id="pax" type="number" min="1" name="pax" value="{{ old('pax', $booking->pax ?? 1) }}" class="w-full rounded-lg border-border" required>
+        <input id="pax" type="number" min="1" name="pax" value="{{ old('pax', $booking->pax ?? 1) }}" class="w-full rounded-xl border border-border bg-background px-3 py-2.5 transition focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10" required>
         @error('pax')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>
         <label for="travel_date" class="block text-sm font-medium mb-1">Travel date</label>
-        <input id="travel_date" type="date" name="travel_date" value="{{ old('travel_date', isset($booking) ? $booking->travel_date->format('Y-m-d') : '') }}" class="w-full rounded-lg border-border" required>
+        <input id="travel_date" type="date" name="travel_date" value="{{ old('travel_date', isset($booking) ? $booking->travel_date->format('Y-m-d') : '') }}" class="w-full rounded-xl border border-border bg-background px-3 py-2.5 transition focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10" required>
         @error('travel_date')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>
+        <label for="travel_time" class="block text-sm font-medium mb-1">Travel time</label>
+        <input id="travel_time" type="time" name="travel_time" value="{{ old('travel_time', isset($booking) && $booking->travel_time ? substr((string) $booking->travel_time, 0, 5) : '') }}" class="w-full rounded-xl border border-border bg-background px-3 py-2.5 transition focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10">
+        @error('travel_time')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+    </div>
+    <div>
         <label for="total_amount" class="block text-sm font-medium mb-1">Total amount</label>
-        <input id="total_amount" type="number" min="0" step="0.01" name="total_amount" value="{{ old('total_amount', $booking->total_amount ?? '') }}" class="w-full rounded-lg border-border" required>
+        <input id="total_amount" type="number" min="0" step="0.01" name="total_amount" value="{{ old('total_amount', $booking->total_amount ?? '') }}" class="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-lg font-semibold text-primary transition focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10" required>
         @error('total_amount')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
+    @if (!isset($booking))
+        <div>
+            <label for="discount_code" class="block text-sm font-medium mb-1">Discount code <span class="font-normal text-gray-400">(optional)</span></label>
+            <input id="discount_code" name="discount_code" value="{{ old('discount_code') }}" placeholder="e.g. SUMMER20" class="w-full rounded-xl border border-border bg-background px-3 py-2.5 uppercase transition focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10">
+            @error('discount_code')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+            <p class="mt-1 text-xs text-gray-400">The discount will be applied to the total amount after validation.</p>
+        </div>
+    @endif
 </div>

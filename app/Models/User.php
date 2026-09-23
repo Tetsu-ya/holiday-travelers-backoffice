@@ -35,4 +35,18 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function hasPermission(string $permission): bool
+    {
+        if ($this->role === 'admin') return true;
+
+        $configured = RolePermission::where('role', $this->role)->value('permissions');
+        if ($configured !== null) return in_array($permission, (array) $configured, true);
+
+        return in_array($permission, match ($this->role) {
+            'manager' => ['view_dashboard', 'manage_staff', 'manage_tours', 'manage_bookings', 'manage_partners', 'manage_marketing', 'manage_documents', 'view_reports'],
+            'agent' => ['view_dashboard', 'manage_bookings', 'manage_documents'],
+            default => ['view_dashboard', 'manage_bookings'],
+        }, true);
+    }
 }

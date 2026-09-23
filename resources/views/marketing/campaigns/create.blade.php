@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="max-w-3xl bg-card rounded-xl border border-border shadow-sm p-6">
-    <form method="POST" action="{{ route('campaigns.store') }}" class="space-y-5">
+    <form method="POST" action="{{ route('campaigns.store') }}" class="space-y-5" id="campaign-create-form">
         @csrf
 
         <div class="grid gap-5 md:grid-cols-2">
@@ -66,9 +66,18 @@
         </div>
 
         <div class="flex gap-3">
-            <button type="submit" class="px-4 py-2 rounded-lg bg-primary text-white">Create campaign</button>
-            <a href="{{ route('campaigns.index') }}" class="px-4 py-2 rounded-lg border border-border">Cancel</a>
+            <button type="submit" class="campaign-submit group inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-secondary hover:shadow-xl active:translate-y-0 active:scale-95"><span class="campaign-submit-label">Create campaign</span><span aria-hidden="true" class="transition-transform duration-200 group-hover:translate-x-1">→</span></button>
+            <a href="{{ route('campaigns.index') }}" class="group inline-flex items-center gap-2 rounded-xl border border-border px-5 py-2.5 text-sm font-semibold text-primary transition-all duration-200 hover:-translate-y-0.5 hover:border-secondary hover:text-secondary active:translate-y-0 active:scale-95"><span class="transition-transform duration-200 group-hover:-translate-x-1">←</span><span>Cancel</span></a>
         </div>
     </form>
 </div>
+<script>
+    document.getElementById('campaign-create-form')?.addEventListener('submit', function () {
+        const button = this.querySelector('.campaign-submit');
+        if (!button) return;
+        button.disabled = true;
+        button.classList.add('is-loading');
+        button.querySelector('.campaign-submit-label').textContent = 'Creating campaign...';
+    });
+</script>
 @endsection

@@ -41,6 +41,7 @@ class BusinessPartnerController extends Controller
             'commission_rate' => 'nullable|numeric|min:0|max:100',
         ]);
 
+        $data['status'] = 'active';
         BusinessPartner::create($data);
         return redirect()->route('partners.index')->with('success', 'Business partner added.');
     }
