@@ -20,6 +20,104 @@
 		border-radius: 999px;
 		background: rgba(255, 255, 255, 0.2);
 	}
+
+	/* Pin the collapsed preference before first paint to avoid a flash of the expanded rail */
+	html.sidebar-rail #app-sidebar {
+		width: 5.25rem;
+	}
+
+	/* Advanced sidebar: smooth width transition between expanded and rail mode */
+	#app-sidebar {
+		transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1), width 220ms cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	/* Text/label fade when collapsing so labels don't wrap mid-animation */
+	#app-sidebar .sidebar-label {
+		transition: opacity 140ms ease;
+	}
+
+	@media (min-width: 1024px) {
+		body.sidebar-collapsed #app-sidebar {
+			width: 5.25rem;
+		}
+
+		/* Rail mode: hide every text label and nested sub-menu, centre the icons */
+		body.sidebar-collapsed #app-sidebar .sidebar-label,
+		body.sidebar-collapsed #app-sidebar .sidebar-sublist,
+		body.sidebar-collapsed #app-sidebar .sidebar-section-title,
+		body.sidebar-collapsed #app-sidebar .sidebar-workspace {
+			opacity: 0;
+			pointer-events: none;
+			position: absolute;
+			width: 0;
+			overflow: hidden;
+		}
+
+		body.sidebar-collapsed #app-sidebar nav > .sidebar-node,
+		body.sidebar-collapsed #app-sidebar nav > details > summary,
+		body.sidebar-collapsed #app-sidebar nav > .sidebar-node > a {
+			justify-content: center;
+			padding-left: 0.5rem;
+			padding-right: 0.5rem;
+		}
+
+		body.sidebar-collapsed #app-sidebar nav > .sidebar-node > a .sidebar-icon,
+		body.sidebar-collapsed #app-sidebar nav > details > summary .sidebar-icon {
+			margin: 0;
+		}
+
+		body.sidebar-collapsed #app-sidebar nav > details > summary {
+			justify-content: center;
+		}
+
+		body.sidebar-collapsed #app-sidebar nav > details > summary > .sidebar-label,
+		body.sidebar-collapsed #app-sidebar nav > details > summary > span:last-child {
+			display: none;
+		}
+
+		/* Rail-mode hover flyout for grouped sections */
+		body.sidebar-collapsed #app-sidebar details.sidebar-node > .sidebar-sublist {
+			opacity: 1;
+			pointer-events: auto;
+			position: absolute;
+			left: calc(100% - 0.6rem);
+			top: 0;
+			z-index: 50;
+			width: 16rem;
+			max-height: 24rem;
+			overflow-y: auto;
+			padding: 0.75rem;
+			border: 1px solid rgba(255, 255, 255, 0.14);
+			border-radius: 0.85rem;
+			background: #122f57;
+			box-shadow: 0 22px 45px rgba(8, 20, 38, 0.5);
+			opacity: 0;
+		}
+
+		body.sidebar-collapsed #app-sidebar details.sidebar-node:hover > .sidebar-sublist,
+		body.sidebar-collapsed #app-sidebar details.sidebar-node:focus-within > .sidebar-sublist {
+			opacity: 1;
+			visibility: visible;
+		}
+
+		/* Flyout children need their own label colour since the rail hides text globally */
+		body.sidebar-collapsed #app-sidebar details.sidebar-node > .sidebar-sublist a .sidebar-label {
+			opacity: 1;
+			pointer-events: auto;
+			position: static;
+			width: auto;
+			overflow: visible;
+		}
+
+		/* Collapse handle flips its chevron and hugs the rail edge */
+		#sidebar-collapse-handle .sidebar-handle-chevron {
+			transition: transform 220ms ease;
+		}
+
+		body.sidebar-collapsed #sidebar-collapse-handle .sidebar-handle-chevron {
+			transform: rotate(180deg);
+		}
+	}
 }
 
 @layer components {

@@ -10,6 +10,9 @@
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         }
+        if (localStorage.sidebar === 'collapsed') {
+            document.documentElement.classList.add('sidebar-rail');
+        }
     </script>
     @vite(['resources/css/app.css'])
 </head>
@@ -23,13 +26,13 @@
                     <div class="flex h-11 w-11 shrink-0 items-center justify-center bg-white p-1 shadow-lg shadow-black/10">
                         <img src="{{ asset('images/logo.png') }}" alt="Holiday Travelers Inc." class="h-full w-full object-contain">
                     </div>
-                <div class="leading-tight">
+                <div class="sidebar-label leading-tight">
                         <p class="font-heading text-sm font-semibold tracking-tight">Holiday Travelers</p>
                         <p class="mt-0.5 text-[11px] font-medium uppercase tracking-[0.18em] text-accent">Back Office</p>
                     </div>
                 </div>
             </div>
-            <div class="px-4 pt-4">
+            <div class="sidebar-workspace px-4 pt-4">
                 <div class="rounded-2xl border border-white/10 bg-black/10 p-3.5 shadow-inner shadow-black/10 backdrop-blur-sm">
                     <div class="mb-2 flex items-center justify-between">
                         <span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">Workspace</span>
@@ -48,7 +51,7 @@
                 </div>
             </div>
             <nav aria-label="Primary navigation" class="sidebar-scrollbar flex-1 overflow-y-auto px-4 py-5 text-sm">
-                <div class="mb-3 px-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40">Navigation</div>
+                <div class="sidebar-section-title mb-3 px-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/40">Navigation</div>
                 @php
                     $nav = [
                         [
@@ -135,12 +138,12 @@
                 @foreach ($nav as $section)
                     @if (empty($section['children']))
                         <a href="{{ route($section['route']) }}"
-                           class="group mb-1.5 flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70
+                           class="sidebar-node group mb-1.5 flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70
                                   {{ request()->routeIs($section['route']) ? 'bg-white text-primary shadow-lg shadow-black/10 ring-1 ring-white/30' : 'text-white/75 hover:bg-white/10 hover:text-white' }}">
-                            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-sm transition {{ request()->routeIs($section['route']) ? 'bg-secondary text-white' : 'text-white/70 group-hover:bg-white/15' }}">{{ $section['icon'] }}</span>
-                            <span class="flex-1 text-sm font-medium">{{ $section['label'] }}</span>
+                            <span class="sidebar-icon flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-sm transition {{ request()->routeIs($section['route']) ? 'bg-secondary text-white' : 'text-white/70 group-hover:bg-white/15' }}">{{ $section['icon'] }}</span>
+                            <span class="sidebar-label flex-1 text-sm font-medium">{{ $section['label'] }}</span>
                             @if (request()->routeIs($section['route']))
-                                <span class="h-1.5 w-1.5 rounded-full bg-secondary"></span>
+                                <span class="sidebar-label h-1.5 w-1.5 rounded-full bg-secondary"></span>
                             @endif
                         </a>
                     @else
@@ -152,17 +155,17 @@
                                     : request()->routeIs('module.placeholder') && request()->route('module') === $childRoute;
                             });
                         @endphp
-                        <details class="group mb-2" {{ $sectionActive ? 'open' : '' }}>
+                        <details class="sidebar-node group mb-2" {{ $sectionActive ? 'open' : '' }}>
                             <summary class="flex cursor-pointer list-none items-center justify-between rounded-xl px-3 py-2.5 text-[11px] font-semibold uppercase tracking-[0.13em] text-white/55 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 {{ $sectionActive ? 'bg-white/10 text-white' : '' }}">
                                 <span class="flex items-center gap-2">
-                                    <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 text-[12px]">{{ $section['icon'] }}</span>
-                                    {{ $section['label'] }}
+                                    <span class="sidebar-icon flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 text-[12px]">{{ $section['icon'] }}</span>
+                                    <span class="sidebar-label">{{ $section['label'] }}</span>
                                 </span>
-                                <span class="flex items-center gap-2">
+                                <span class="sidebar-label flex items-center gap-2">
                                     <span class="text-sm text-white/40 transition-transform group-open:rotate-180" aria-hidden="true">⌄</span>
                                 </span>
                             </summary>
-                            <div class="mt-1.5 space-y-1 border-l border-white/15 pl-2">
+                            <div class="sidebar-sublist mt-1.5 space-y-1 border-l border-white/15 pl-2">
                                 @foreach ($section['children'] as $childIndex => [$label, $route])
                                     @php
                                         $isNamedRoute = Route::has($route);
@@ -176,7 +179,7 @@
                                        class="group flex min-w-0 items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70
                                             {{ $active ? 'bg-secondary/90 font-medium text-white shadow-sm ring-1 ring-white/10' : 'text-white/65 hover:bg-white/10 hover:text-white' }}">
                                         <span class="w-5 shrink-0 text-[10px] font-semibold tracking-wider {{ $active ? 'text-white/80' : 'text-white/30 group-hover:text-accent' }}">{{ str_pad($childIndex + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                                        <span class="min-w-0 truncate">{{ $label }}</span>
+                                        <span class="sidebar-label min-w-0 truncate">{{ $label }}</span>
                                     </a>
                                 @endforeach
                             </div>
@@ -185,10 +188,10 @@
                 @endforeach
             </nav>
             <div class="border-t border-white/10 bg-black/10 px-5 py-4 text-xs text-white/60">
-                <div class="flex items-center justify-between gap-3">
+                <div class="sidebar-label flex items-center gap-3">
                     <span>&copy; {{ date('Y') }} Holiday Travelers</span>
                 </div>
-                <div class="mt-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/35">
+                <div class="sidebar-label mt-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/35">
                     <span class="h-1.5 w-1.5 rounded-full bg-success"></span>
                     All systems operational
                 </div>
@@ -205,6 +208,14 @@
                             <line x1="6" y1="8" x2="18" y2="8" />
                             <line x1="6" y1="12" x2="18" y2="12" />
                             <line x1="6" y1="16" x2="18" y2="16" />
+                        </svg>
+                    </button>
+                    <button type="button" id="sidebar-collapse-toggle" aria-label="Collapse navigation" title="Collapse navigation" aria-pressed="false"
+                            class="hidden h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-border bg-card text-primary shadow-sm transition hover:border-secondary/50 hover:bg-secondary/10 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 active:scale-95 lg:flex dark:bg-gray-800 dark:text-gray-100">
+                        <svg class="h-5 w-5 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="3" y="3.5" width="18" height="17" rx="3" />
+                            <line x1="9" y1="3.5" x2="9" y2="20.5" />
+                            <path d="M15.5 9.5 13 12l2.5 2.5" />
                         </svg>
                     </button>
                     <div class="min-w-0">
@@ -264,6 +275,8 @@
         const sidebar = document.getElementById('app-sidebar');
         const sidebarOverlay = document.getElementById('sidebar-overlay');
         const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebarCollapseToggle = document.getElementById('sidebar-collapse-toggle');
+        const isDesktop = () => window.matchMedia('(min-width: 1024px)').matches;
 
         function closeSidebar() {
             sidebar.classList.add('-translate-x-full');
@@ -276,6 +289,40 @@
         });
         sidebarOverlay?.addEventListener('click', closeSidebar);
         sidebar?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeSidebar));
+
+        /* Advanced sidebar: persist the rail/expanded preference and keep a11y state in sync. */
+        function setSidebarCollapsed(collapsed) {
+            document.body.classList.toggle('sidebar-collapsed', collapsed);
+            document.documentElement.classList.toggle('sidebar-rail', collapsed);
+            localStorage.sidebar = collapsed ? 'collapsed' : 'expanded';
+
+            if (sidebarCollapseToggle) {
+                const label = collapsed ? 'Expand navigation' : 'Collapse navigation';
+                sidebarCollapseToggle.setAttribute('aria-label', label);
+                sidebarCollapseToggle.setAttribute('title', label);
+                sidebarCollapseToggle.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
+            }
+
+            /* Rail mode hides the sub-lists, so open the active section again when expanding. */
+            if (!collapsed) {
+                const active = sidebar?.querySelector('details.sidebar-node[open]');
+                active?.querySelector('.sidebar-sublist')?.classList.remove('hidden');
+            }
+        }
+
+        sidebarCollapseToggle?.addEventListener('click', () => {
+            setSidebarCollapsed(!document.body.classList.contains('sidebar-collapsed'));
+        });
+
+        /* Ctrl/Cmd + B mirrors the desktop collapse toggle. */
+        document.addEventListener('keydown', (event) => {
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'b' && isDesktop()) {
+                event.preventDefault();
+                setSidebarCollapsed(!document.body.classList.contains('sidebar-collapsed'));
+            }
+        });
+
+        setSidebarCollapsed(localStorage.sidebar === 'collapsed');
     </script>
 </body>
 </html>
