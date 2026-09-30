@@ -25,6 +25,15 @@ Route::middleware('guest')->group(function () {
     Route::post('login/verify', [\App\Http\Controllers\Auth\LoginController::class, 'verifyLogin']);
     Route::get('auth/google/redirect', [\App\Http\Controllers\Auth\LoginController::class, 'redirectToGoogle'])->name('google.redirect');
     Route::get('auth/google/callback', [\App\Http\Controllers\Auth\LoginController::class, 'handleGoogleCallback'])->name('google.callback');
+
+    // Password reset: request a code, confirm it, then choose a new password.
+    Route::get('forgot-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('forgot-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'sendCode'])->name('password.email');
+    Route::get('forgot-password/verify', [\App\Http\Controllers\Auth\PasswordResetController::class, 'showVerifyForm'])->name('password.verify');
+    Route::post('forgot-password/verify', [\App\Http\Controllers\Auth\PasswordResetController::class, 'verifyCode'])->name('password.code.verify');
+    Route::post('forgot-password/resend', [\App\Http\Controllers\Auth\PasswordResetController::class, 'resendCode'])->name('password.code.resend');
+    Route::get('reset-password/{token}', [\App\Http\Controllers\Auth\PasswordResetController::class, 'showResetForm'])->name('password.reset');
+    Route::post('reset-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'reset'])->name('password.update');
 });
 
 Route::middleware(['auth', 'permission'])->group(function () {

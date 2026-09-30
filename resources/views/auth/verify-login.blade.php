@@ -28,11 +28,15 @@
             </div>
             @endif
 
-            <form method="POST" action="{{ route('login.verify') }}" class="space-y-5">
+            <div id="code-countdown" class="mb-5 rounded-xl border border-accent/30 bg-accent/10 px-4 py-3 text-center text-sm font-semibold text-primary" data-expires-at="{{ $expiresAt * 1000 }}">
+                Code expires in <span id="countdown-time">01:00</span>
+            </div>
+
+            <form id="verification-form" method="POST" action="{{ route('login.verify') }}" class="space-y-5">
             @csrf
-            <input type="text" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required autofocus
+            <input id="verification-code" type="text" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required autofocus
                    class="w-full rounded-xl border border-border bg-background px-4 py-4 text-center text-2xl font-semibold tracking-[0.5em] text-primary outline-none transition focus:border-accent focus:ring-4 focus:ring-accent/15">
-            <button type="submit" class="w-full rounded-xl bg-secondary px-4 py-3 font-button text-sm font-semibold text-white shadow-lg shadow-secondary/20 transition hover:-translate-y-0.5 hover:opacity-90">
+            <button id="verify-button" type="submit" class="w-full rounded-xl bg-secondary px-4 py-3 font-button text-sm font-semibold text-white shadow-lg shadow-secondary/20 transition hover:-translate-y-0.5 hover:opacity-90">
                 Verify and Sign In
             </button>
             </form>
@@ -41,5 +45,34 @@
         </div>
     </main>
     </div>
+    <script>
+        (() => {
+            const countdown = document.getElementById('code-countdown');
+            const time = document.getElementById('countdown-time');
+            const input = document.getElementById('verification-code');
+            const button = document.getElementById('verify-button');
+            const expiresAt = Number(countdown.dataset.expiresAt);
+
+            const update = () => {
+                const remaining = Math.max(0, expiresAt - Date.now());
+                const seconds = Math.ceil(remaining / 1000);
+                time.textContent = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+
+                if (remaining <= 0) {
+                    countdown.classList.remove('border-accent/30', 'bg-accent/10');
+                    countdown.classList.add('border-error/30', 'bg-error/10', 'text-error');
+                    time.textContent = 'Expired';
+                    input.disabled = true;
+                    button.disabled = true;
+                    button.classList.add('cursor-not-allowed', 'opacity-50');
+                    clearInterval(timer);
+                }
+            };
+
+            let timer;
+            update();
+            timer = setInterval(update, 1000);
+        })();
+    </script>
 </body>
 </html>

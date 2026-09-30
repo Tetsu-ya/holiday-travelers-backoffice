@@ -14,6 +14,8 @@ use Throwable;
 
 class LoginController extends Controller
 {
+    private const VERIFICATION_TTL_MINUTES = 1;
+
     public function create()
     {
         return view('auth.login');
@@ -34,11 +36,11 @@ class LoginController extends Controller
                 'login_verification.user_id' => $user->id,
                 'login_verification.remember' => $request->boolean('remember'),
                 'login_verification.code' => Hash::make($code),
-                'login_verification.expires_at' => now()->addMinutes(10)->timestamp,
+                'login_verification.expires_at' => now()->addMinutes(self::VERIFICATION_TTL_MINUTES)->timestamp,
             ]);
 
             try {
-                Mail::raw("Your Holiday Travelers verification code is: {$code}\n\nThis code expires in 10 minutes.", function ($message) use ($user) {
+                Mail::raw("Your Holiday Travelers verification code is: {$code}\n\nThis code expires in 1 minute.", function ($message) use ($user) {
                     $message->to(config('mail.code_recipient', $user->email))
                         ->subject('Your Holiday Travelers verification code');
                 });
@@ -65,7 +67,9 @@ class LoginController extends Controller
             return redirect()->route('login');
         }
 
-        return view('auth.verify-login');
+        return view('auth.verify-login', [
+            'expiresAt' => (int) $request->session()->get('login_verification.expires_at'),
+        ]);
     }
 
     public function verifyLogin(Request $request)

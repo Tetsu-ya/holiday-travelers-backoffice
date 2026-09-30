@@ -53,6 +53,12 @@
                 </div>
             </div>
 
+            @if (session('status'))
+                <div class="mb-5 rounded-xl border border-success/30 bg-success/10 px-4 py-3 text-sm text-success">
+                    {{ session('status') }}
+                </div>
+            @endif
+
             @if ($errors->any())
                 <div class="mb-5 rounded-xl border border-error/30 bg-error/10 px-4 py-3 text-sm text-error">
                     {{ $errors->first() }}
@@ -70,7 +76,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="mb-2 flex items-center justify-between"><label class="block text-sm font-semibold text-primary">Password</label><span class="text-xs text-gray-400">Protected access</span></div>
+                    <div class="mb-2 flex items-center justify-between"><label class="block text-sm font-semibold text-primary">Password</label><a href="{{ route('password.request') }}" class="group rounded-lg bg-secondary/10 px-2.5 py-1 text-xs font-semibold text-secondary transition duration-200 hover:-translate-y-0.5 hover:bg-secondary hover:text-white hover:shadow-md hover:shadow-secondary/20 focus:outline-none focus-visible:ring-4 focus-visible:ring-secondary/20"><span>Forgot password?</span><span aria-hidden="true" class="ml-1 inline-block transition-transform duration-200 group-hover:translate-x-0.5">→</span></a></div>
                     <div class="relative">
                         <input id="password" type="password" name="password" required autocomplete="current-password"
                                class="w-full rounded-xl border border-border bg-background px-4 py-3.5 pr-14 text-sm text-primary outline-none transition focus:border-accent focus:bg-white focus:ring-4 focus:ring-accent/15">
