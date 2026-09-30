@@ -29,7 +29,7 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php -r \"if (file_exists('artisan')) { passthru(PHP_BINARY . ' artisan package:discover --ansi'); }\""
         ]
     },
     "minimum-stability": "stable",
