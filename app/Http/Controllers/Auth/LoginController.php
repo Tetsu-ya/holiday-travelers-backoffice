@@ -30,20 +30,9 @@ class LoginController extends Controller
 
         if (Auth::validate($credentials)) {
             $user = User::where('email', $credentials['email'])->firstOrFail();
-            $code = (string) random_int(100000, 999999);
-
-            $request->session()->put([
-                'login_verification.user_id' => $user->id,
-                'login_verification.remember' => $request->boolean('remember'),
-                'login_verification.code' => Hash::make($code),
-                'login_verification.expires_at' => now()->addMinutes(self::VERIFICATION_TTL_MINUTES)->timestamp,
-            ]);
 
             try {
-                Mail::raw("Your Holiday Travelers verification code is: {$code}\n\nThis code expires in 1 minute.", function ($message) use ($user) {
-                    $message->to(config('mail.code_recipient', $user->email))
-                        ->subject('Your Holiday Travelers verification code');
-                });
+                $this->sendVerificationCode($request, $user, $request->boolean('remember'));
             } catch (Throwable $exception) {
                 report($exception);
                 $request->session()->forget('login_verification');
@@ -59,6 +48,32 @@ class LoginController extends Controller
         return back()->withErrors([
             'email' => 'These credentials do not match our records.',
         ])->onlyInput('email');
+    }
+
+    public function resendCode(Request $request)
+    {
+        $verification = $request->session()->get('login_verification');
+        $user = $verification ? User::find($verification['user_id'] ?? null) : null;
+
+        if (! $user) {
+            $request->session()->forget('login_verification');
+
+            return redirect()->route('login')->withErrors([
+                'email' => 'Your sign-in verification expired. Please sign in again.',
+            ]);
+        }
+
+        try {
+            $this->sendVerificationCode($request, $user, (bool) ($verification['remember'] ?? false));
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return back()->withErrors([
+                'code' => 'We could not send the verification email. Please check the Gmail SMTP App Password.',
+            ]);
+        }
+
+        return redirect()->route('login.verify')->with('status', 'We sent a new verification code to your email.');
     }
 
     public function showVerificationForm(Request $request)
@@ -163,5 +178,25 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login');
+    }
+
+    private function sendVerificationCode(Request $request, User $user, bool $remember): void
+    {
+        $code = (string) random_int(100000, 999999);
+        $recipient = config('mail.code_recipient') ?: $user->email;
+
+        Mail::mailer()->raw(
+            "Your Holiday Travelers verification code is: {$code}\n\nThis code expires in ".self::VERIFICATION_TTL_MINUTES.' minute.',
+            function ($message) use ($recipient) {
+                $message->to($recipient)->subject('Your Holiday Travelers verification code');
+            },
+        );
+
+        $request->session()->put([
+            'login_verification.user_id' => $user->id,
+            'login_verification.remember' => $remember,
+            'login_verification.code' => Hash::make($code),
+            'login_verification.expires_at' => now()->addMinutes(self::VERIFICATION_TTL_MINUTES)->timestamp,
+        ]);
     }
 }

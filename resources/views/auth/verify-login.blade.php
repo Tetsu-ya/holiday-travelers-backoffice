@@ -28,6 +28,12 @@
             </div>
             @endif
 
+            @if (session('status'))
+            <div class="mb-5 rounded-xl border border-success/30 bg-success/10 px-4 py-3 text-sm text-success">
+                {{ session('status') }}
+            </div>
+            @endif
+
             <div id="code-countdown" class="mb-5 rounded-xl border border-accent/30 bg-accent/10 px-4 py-3 text-center text-sm font-semibold text-primary" data-expires-at="{{ $expiresAt * 1000 }}">
                 Code expires in <span id="countdown-time">01:00</span>
             </div>
@@ -39,6 +45,13 @@
             <button id="verify-button" type="submit" class="w-full rounded-xl bg-secondary px-4 py-3 font-button text-sm font-semibold text-white shadow-lg shadow-secondary/20 transition hover:-translate-y-0.5 hover:opacity-90">
                 Verify and Sign In
             </button>
+            </form>
+
+            <form method="POST" action="{{ route('login.code.resend') }}" class="mt-4">
+                @csrf
+                <button type="submit" class="w-full rounded-xl border border-border px-4 py-3 text-sm font-semibold text-primary transition hover:border-secondary hover:text-secondary">
+                    Resend code
+                </button>
             </form>
 
             <a href="{{ route('login') }}" class="mt-6 block text-center text-sm font-medium text-primary transition hover:text-secondary">Back to login</a>
