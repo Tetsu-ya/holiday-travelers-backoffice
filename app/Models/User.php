@@ -49,4 +49,9 @@ class User extends Authenticatable
             default => ['view_dashboard', 'manage_bookings'],
         }, true);
     }
+
+    public function bookingStaffAssignments()
+    {
+        return $this->hasMany(BookingStaffAssignment::class)->latest();
+    }
 }

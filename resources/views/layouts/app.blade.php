@@ -19,7 +19,7 @@
 <body class="bg-background font-body text-primary antialiased">
     <div class="flex h-screen min-h-screen overflow-hidden bg-background">
         {{-- Sidebar --}}
-        <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-primary/40 backdrop-blur-sm lg:hidden"></div>
+        <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-primary/55 backdrop-blur-md"></div>
         <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-40 flex h-[100dvh] min-h-screen w-80 shrink-0 -translate-x-full flex-col overflow-hidden border-r border-white/10 bg-gradient-to-b from-primary via-[#12345f] to-[#0d2749] text-white shadow-2xl shadow-primary/20 transition-transform duration-200 lg:sticky lg:top-0 lg:translate-x-0">
             <div class="border-b border-white/10 bg-white/[0.03] px-5 py-5">
                 <div class="flex items-center gap-3">
@@ -65,23 +65,14 @@
                             'icon' => '👥',
                             'children' => [
                                 ['Staff Profiles', 'staff-profiles.index'],
-                                ['Agent Profiles', 'agent-profiles.index'],
-                                ['Roles & Permissions', 'roles-permissions.index'],
-                                ['Tasks', 'tasks.index'],
-                                ['Scheduling', 'scheduling.index'],
-                                ['Performance', 'performance.index'],
+                                ['Staff Assignments', 'booking-staff-assignments.index'],
                             ],
                         ],
                         [
                             'label' => 'Supplier & Partner Management',
                             'icon' => '🤝',
                             'children' => [
-                                ['Suppliers', 'suppliers.index'],
-                                ['Business Partners', 'partners.index'],
-                                ['Contracts', 'supplier-contracts.index'],
-                                ['Rates', 'supplier-rates.index'],
-                                ['Availability', 'supplier-availability.index'],
-                                ['Performance', 'supplier-performance.index'],
+                                ['Suppliers & Partners', 'suppliers.index'],
                             ],
                         ],
                         [
@@ -93,7 +84,6 @@
                                 ['Tour Schedule', 'tour-schedule.index'],
                                 ['Availability', 'tour-availability.index'],
                                 ['Resource Allocation', 'resource-allocation.index'],
-                                ['Staff Assignment', 'staff-assignment.index'],
                                 ['Resource Calendar', 'resource-calendar.index'],
                                 ['AI Resource Planning', 'ai-planning.index'],
                                 ['Payment Methods', 'payment-methods.index'],
@@ -203,19 +193,19 @@
             <header class="sticky top-0 z-20 flex items-center justify-between border-b border-border bg-card/95 px-4 py-4 shadow-sm backdrop-blur-md dark:bg-gray-800/95 sm:px-6 lg:px-8">
                 <div class="flex min-w-0 items-center gap-3">
                     <button type="button" id="sidebar-toggle" aria-label="Open navigation" title="Open navigation"
-                            class="hidden h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-primary text-white shadow-lg shadow-primary/25 transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 active:scale-95">
-                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
-                            <line x1="6" y1="8" x2="18" y2="8" />
-                            <line x1="6" y1="12" x2="18" y2="12" />
-                            <line x1="6" y1="16" x2="18" y2="16" />
+                            class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#2b67a2] bg-[#17477f] text-white shadow-lg shadow-primary/25 transition hover:bg-[#205b99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 active:scale-95 lg:hidden">
+                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+                            <line x1="5" y1="7" x2="19" y2="7" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <line x1="5" y1="17" x2="19" y2="17" />
                         </svg>
                     </button>
                     <button type="button" id="sidebar-collapse-toggle" aria-label="Collapse navigation" title="Collapse navigation" aria-pressed="false"
                             class="hidden h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-border bg-card text-primary shadow-sm transition hover:border-secondary/50 hover:bg-secondary/10 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 active:scale-95 lg:flex dark:bg-gray-800 dark:text-gray-100">
-                        <svg class="h-5 w-5 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <rect x="3" y="3.5" width="18" height="17" rx="3" />
-                            <line x1="9" y1="3.5" x2="9" y2="20.5" />
-                            <path d="M15.5 9.5 13 12l2.5 2.5" />
+                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+                            <line x1="5" y1="7" x2="19" y2="7" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <line x1="5" y1="17" x2="19" y2="17" />
                         </svg>
                     </button>
                     <div class="min-w-0">
@@ -287,20 +277,28 @@
             sidebar.classList.toggle('-translate-x-full');
             sidebarOverlay.classList.toggle('hidden');
         });
-        sidebarOverlay?.addEventListener('click', closeSidebar);
+        sidebarOverlay?.addEventListener('click', () => {
+            if (isDesktop()) {
+                setSidebarCollapsed(true);
+                sidebarOverlay.classList.add('hidden');
+            } else {
+                closeSidebar();
+            }
+        });
         sidebar?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeSidebar));
 
         /* Advanced sidebar: persist the rail/expanded preference and keep a11y state in sync. */
         function setSidebarCollapsed(collapsed) {
-            document.body.classList.toggle('sidebar-collapsed', collapsed);
-            document.documentElement.classList.toggle('sidebar-rail', collapsed);
+            const desktopCollapsed = isDesktop() && collapsed;
+            document.body.classList.toggle('sidebar-collapsed', desktopCollapsed);
+            document.documentElement.classList.toggle('sidebar-rail', desktopCollapsed);
             localStorage.sidebar = collapsed ? 'collapsed' : 'expanded';
 
             if (sidebarCollapseToggle) {
-                const label = collapsed ? 'Expand navigation' : 'Collapse navigation';
+                const label = desktopCollapsed ? 'Expand navigation' : 'Collapse navigation';
                 sidebarCollapseToggle.setAttribute('aria-label', label);
                 sidebarCollapseToggle.setAttribute('title', label);
-                sidebarCollapseToggle.setAttribute('aria-pressed', collapsed ? 'true' : 'false');
+                sidebarCollapseToggle.setAttribute('aria-pressed', desktopCollapsed ? 'true' : 'false');
             }
 
             /* Rail mode hides the sub-lists, so open the active section again when expanding. */
@@ -311,7 +309,12 @@
         }
 
         sidebarCollapseToggle?.addEventListener('click', () => {
-            setSidebarCollapsed(!document.body.classList.contains('sidebar-collapsed'));
+            const collapsed = document.body.classList.contains('sidebar-collapsed');
+            setSidebarCollapsed(!collapsed);
+
+            if (isDesktop()) {
+                sidebarOverlay.classList.toggle('hidden', !collapsed);
+            }
         });
 
         /* Ctrl/Cmd + B mirrors the desktop collapse toggle. */
@@ -323,6 +326,7 @@
         });
 
         setSidebarCollapsed(localStorage.sidebar === 'collapsed');
+        window.addEventListener('resize', () => setSidebarCollapsed(localStorage.sidebar === 'collapsed'));
     </script>
 </body>
 </html>

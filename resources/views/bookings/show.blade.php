@@ -18,6 +18,24 @@
     <div class="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
         <div class="space-y-6">
             <div class="bg-card rounded-xl border border-border shadow-sm p-6">
+                <div class="mb-4 flex items-center justify-between gap-3">
+                    <div><h2 class="text-lg font-semibold">Assigned staff</h2><p class="mt-1 text-sm text-gray-500">People responsible for this client booking.</p></div>
+                    <a href="{{ route('booking-staff-assignments.index', ['booking_id' => $booking->id]) }}" class="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-white">Assign staff</a>
+                </div>
+                @if($booking->staffAssignments->isEmpty())
+                    <p class="text-sm text-gray-500">No staff assigned yet.</p>
+                @else
+                    <div class="space-y-3">
+                        @foreach($booking->staffAssignments as $assignment)
+                            <div class="flex items-center justify-between rounded-lg border border-border bg-gray-50 p-3">
+                                <div><div class="font-medium">{{ $assignment->user->name }}</div><div class="text-xs capitalize text-gray-500">{{ str_replace('_', ' ', $assignment->assignment_role) }}</div></div>
+                                <span class="rounded-full bg-secondary/10 px-2.5 py-1 text-xs font-medium capitalize text-secondary">{{ $assignment->status }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+            <div class="bg-card rounded-xl border border-border shadow-sm p-6">
                 <dl class="grid gap-5 md:grid-cols-2">
                     <div><dt class="text-sm text-gray-500">Customer</dt><dd class="font-medium">{{ $booking->customer_name }}</dd></div>
                     <div><dt class="text-sm text-gray-500">Package</dt><dd class="font-medium">{{ $booking->tourPackage->name ?? 'Unavailable' }}</dd></div>

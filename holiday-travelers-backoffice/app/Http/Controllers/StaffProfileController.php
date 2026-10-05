@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class StaffProfileController extends Controller
@@ -40,7 +41,7 @@ class StaffProfileController extends Controller
     public function store(Request $request)
     {
         $data = $this->validated($request);
-        $data['password'] = Hash::make($data['password']);
+        $data['password'] = Hash::make(Str::random(40));
 
         User::create($data);
 
@@ -61,11 +62,7 @@ class StaffProfileController extends Controller
     {
         $data = $this->validated($request, $user);
 
-        if (blank($data['password'] ?? null)) {
-            unset($data['password']);
-        } else {
-            $data['password'] = Hash::make($data['password']);
-        }
+        unset($data['password']);
 
         $user->update($data);
 
@@ -86,12 +83,12 @@ class StaffProfileController extends Controller
         return $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user?->id)],
-            'role' => ['required', Rule::in(['admin', 'manager', 'agent', 'staff'])],
+            'role' => ['required', Rule::in(['admin', 'manager', 'agent', 'tour_guide', 'driver', 'staff'])],
             'department' => ['nullable', 'string', 'max:255'],
             'job_title' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'status' => ['required', Rule::in(['active', 'inactive'])],
-            'password' => [$user ? 'nullable' : 'required', 'string', 'min:8', 'confirmed'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
     }
 }

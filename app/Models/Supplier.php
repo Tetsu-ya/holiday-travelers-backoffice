@@ -9,9 +9,14 @@ class Supplier extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'agreement_valid_until' => 'date',
+    ];
+
     protected $fillable = [
         'name', 'category', 'contact_person', 'email', 'phone',
         'location', 'base_rate', 'reliability_rating', 'status',
+        'agreement_status', 'agreement_valid_until', 'perks_inclusions',
     ];
 
     public function tourPackages()

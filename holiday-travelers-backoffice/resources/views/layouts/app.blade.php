@@ -62,23 +62,13 @@
                             'icon' => '👥',
                             'children' => [
                                 ['Staff Profiles', 'staff-profiles.index'],
-                                ['Agent Profiles', 'agent-profiles.index'],
-                                ['Roles & Permissions', 'roles-permissions.index'],
-                                ['Tasks', 'tasks.index'],
-                                ['Scheduling', 'scheduling.index'],
-                                ['Performance', 'performance.index'],
                             ],
                         ],
                         [
                             'label' => 'Supplier & Partner Management',
                             'icon' => '🤝',
                             'children' => [
-                                ['Suppliers', 'suppliers.index'],
-                                ['Business Partners', 'partners.index'],
-                                ['Contracts', 'supplier-contracts.index'],
-                                ['Rates', 'supplier-rates.index'],
-                                ['Availability', 'supplier-availability.index'],
-                                ['Performance', 'supplier-performance.index'],
+                                ['Suppliers & Partners', 'suppliers.index'],
                             ],
                         ],
                         [

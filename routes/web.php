@@ -55,6 +55,10 @@ Route::middleware(['auth', 'permission'])->group(function () {
     Route::resource('tasks', StaffOperationController::class)->only(['index', 'store', 'update', 'destroy'])->parameters(['tasks' => 'record']);
     Route::resource('scheduling', StaffOperationController::class)->only(['index', 'store', 'update', 'destroy'])->parameters(['scheduling' => 'record']);
     Route::resource('performance', StaffOperationController::class)->only(['index', 'store', 'update', 'destroy'])->parameters(['performance' => 'record']);
+    Route::get('booking-staff-assignments', [\App\Http\Controllers\BookingStaffAssignmentController::class, 'index'])->name('booking-staff-assignments.index');
+    Route::post('booking-staff-assignments', [\App\Http\Controllers\BookingStaffAssignmentController::class, 'store'])->name('booking-staff-assignments.store');
+    Route::patch('booking-staff-assignments/{assignment}', [\App\Http\Controllers\BookingStaffAssignmentController::class, 'update'])->name('booking-staff-assignments.update');
+    Route::delete('booking-staff-assignments/{assignment}', [\App\Http\Controllers\BookingStaffAssignmentController::class, 'destroy'])->name('booking-staff-assignments.destroy');
 
     // Tour availability and resource planning
     Route::get('tour-schedule', [TourPlanningController::class, 'schedule'])->name('tour-schedule.index');

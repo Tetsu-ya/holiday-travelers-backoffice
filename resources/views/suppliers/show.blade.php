@@ -18,10 +18,8 @@
         <dl class="grid gap-5 md:grid-cols-2">
             <div><dt class="text-sm text-gray-500">Category</dt><dd class="font-medium capitalize">{{ str_replace('_', ' ', $supplier->category) }}</dd></div>
             <div><dt class="text-sm text-gray-500">Location</dt><dd>{{ $supplier->location ?: 'N/A' }}</dd></div>
-            <div><dt class="text-sm text-gray-500">Contact person</dt><dd>{{ $supplier->contact_person ?: 'N/A' }}</dd></div>
-            <div><dt class="text-sm text-gray-500">Base rate</dt><dd>PHP {{ number_format((float) ($supplier->base_rate ?? 0), 2) }}</dd></div>
-            <div><dt class="text-sm text-gray-500">Email</dt><dd>{{ $supplier->email ?: 'N/A' }}</dd></div>
             <div><dt class="text-sm text-gray-500">Phone</dt><dd>{{ $supplier->phone ?: 'N/A' }}</dd></div>
+            <div><dt class="text-sm text-gray-500">Base rate</dt><dd>PHP {{ number_format((float) ($supplier->base_rate ?? 0), 2) }}</dd></div>
         </dl>
     </div>
 </div>

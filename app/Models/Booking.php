@@ -61,4 +61,9 @@ class Booking extends Model
     {
         return $this->morphMany(Document::class, 'related');
     }
+
+    public function staffAssignments()
+    {
+        return $this->hasMany(BookingStaffAssignment::class);
+    }
 }

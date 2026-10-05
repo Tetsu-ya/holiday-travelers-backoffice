@@ -33,6 +33,7 @@ class EnsurePermission
             'staff-profiles.' => 'manage_staff', 'agent-profiles.' => 'manage_staff',
             'roles-permissions.' => 'manage_staff', 'tasks.' => 'manage_staff',
             'scheduling.' => 'manage_staff', 'performance.' => 'manage_staff',
+            'booking-staff-assignments.' => 'manage_staff',
             'packages.' => 'manage_tours', 'tour-schedule.' => 'manage_tours',
             'tour-availability.' => 'manage_tours', 'resource-allocation.' => 'manage_tours',
             'staff-assignment.' => 'manage_tours', 'resource-calendar.' => 'manage_tours',

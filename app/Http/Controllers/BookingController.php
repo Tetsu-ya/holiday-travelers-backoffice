@@ -119,7 +119,7 @@ class BookingController extends Controller
 
     public function show(Booking $booking)
     {
-        $booking->load(['tourPackage', 'businessPartner', 'discountCode']);
+        $booking->load(['tourPackage', 'businessPartner', 'discountCode', 'staffAssignments.user', 'payments', 'invoices', 'documents']);
         return view('bookings.show', compact('booking'));
     }
 

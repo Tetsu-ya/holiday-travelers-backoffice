@@ -21,11 +21,6 @@
 		background: rgba(255, 255, 255, 0.2);
 	}
 
-	/* Pin the collapsed preference before first paint to avoid a flash of the expanded rail */
-	html.sidebar-rail #app-sidebar {
-		width: 5.25rem;
-	}
-
 	/* Advanced sidebar: smooth width transition between expanded and rail mode */
 	#app-sidebar {
 		transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1), width 220ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -37,8 +32,15 @@
 	}
 
 	@media (min-width: 1024px) {
+		/* Pin the collapsed preference before first paint on desktop only. */
+		html.sidebar-rail #app-sidebar {
+			width: 0;
+			transform: translateX(-100%);
+		}
+
 		body.sidebar-collapsed #app-sidebar {
-			width: 5.25rem;
+			width: 0;
+			transform: translateX(-100%);
 		}
 
 		/* Rail mode: hide every text label and nested sub-menu, centre the icons */
