@@ -24,7 +24,6 @@
                 </div>
                 <p class="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">Holiday Travelers Inc.</p>
                 <h2 class="mt-5 max-w-sm font-heading text-4xl font-semibold leading-tight">Travel operations, beautifully organized.</h2>
-                <p class="mt-5 max-w-sm text-sm leading-6 text-white/70">Manage bookings, partners, resources, and your travel team in one secure workspace.</p>
                 <div class="mt-9 grid max-w-sm grid-cols-1 gap-3">
                     <div class="rounded-xl border border-white/10 bg-white/[0.07] p-3.5 backdrop-blur-sm">
                         <p class="text-lg font-semibold text-white">Secure</p>
