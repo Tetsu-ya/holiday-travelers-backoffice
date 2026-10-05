@@ -20,7 +20,7 @@
             <div class="absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-accent/10"></div>
             <div class="relative">
                 <div class="mb-9 flex h-14 w-14 items-center justify-center rounded-2xl bg-white p-2 shadow-xl shadow-black/20">
-                    <img src="{{ asset('images/logo.png') }}" alt="Holiday Travelers Inc." class="h-full w-full object-contain">
+                    <img src="{{ asset('images/logo-transparent.png') }}" alt="Holiday Travelers Inc." class="h-full w-full object-contain">
                 </div>
                 <p class="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent">Holiday Travelers Inc.</p>
                 <h2 class="mt-5 max-w-sm font-heading text-4xl font-semibold leading-tight">Travel operations, beautifully organized.</h2>
@@ -38,7 +38,7 @@
         <section class="p-7 sm:p-11">
             <div class="mb-9 lg:hidden">
                 <div class="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-white p-2 shadow-md shadow-primary/10 ring-1 ring-primary/5">
-                    <img src="{{ asset('images/logo.png') }}" alt="Holiday Travelers Inc." class="h-full w-full object-contain">
+                    <img src="{{ asset('images/logo-transparent.png') }}" alt="Holiday Travelers Inc." class="h-full w-full object-contain">
                 </div>
                 <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-secondary">Holiday Travelers Inc.</p>
             </div>

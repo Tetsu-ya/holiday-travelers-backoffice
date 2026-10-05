@@ -14,8 +14,8 @@
         <div class="absolute -bottom-24 -left-20 h-80 w-80 rounded-full bg-[#174b83] blur-3xl"></div>
     <main class="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-white/70 bg-card/95 shadow-2xl shadow-primary/15 backdrop-blur-sm">
         <div class="bg-gradient-to-br from-primary via-[#12345f] to-[#0d2749] px-7 py-8 text-white sm:px-10">
-            <div class="mb-6 flex h-12 w-12 items-center justify-center bg-white p-1 shadow-lg shadow-black/10">
-                <img src="{{ asset('images/logo.png') }}" alt="Holiday Travelers Inc." class="h-full w-full object-contain">
+            <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-1 shadow-lg shadow-black/10">
+                <img src="{{ asset('images/logo-transparent.png') }}" alt="Holiday Travelers Inc." class="h-full w-full object-contain">
             </div>
             <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Secure sign in</p>
             <h1 class="mt-2 font-heading text-2xl font-semibold">Check your email</h1>

@@ -12,6 +12,9 @@
         <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.035)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.035)_1px,transparent_1px)] bg-[size:42px_42px]"></div>
         <main class="relative w-full max-w-md overflow-hidden rounded-[2rem] border border-white/70 bg-card/95 shadow-2xl shadow-primary/15 backdrop-blur-sm">
             <div class="bg-gradient-to-br from-primary via-[#12345f] to-[#0d2749] px-7 py-8 text-white sm:px-10">
+                <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-white p-1 shadow-lg shadow-black/10">
+                    <img src="{{ asset('images/logo-transparent.png') }}" alt="Holiday Travelers Inc." class="h-full w-full object-contain">
+                </div>
                 <p class="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Account recovery</p>
                 <h1 class="mt-2 font-heading text-2xl font-semibold">Check your email</h1>
                 <p class="mt-2 text-sm leading-6 text-white/65">We sent a 6-digit code to <span class="font-semibold text-white">{{ $deliveryEmail ?: $email }}</span>.</p>

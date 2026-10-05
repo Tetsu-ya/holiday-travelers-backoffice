@@ -23,8 +23,8 @@
         <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-40 flex h-[100dvh] min-h-screen w-80 shrink-0 -translate-x-full flex-col overflow-hidden border-r border-white/10 bg-gradient-to-b from-primary via-[#12345f] to-[#0d2749] text-white shadow-2xl shadow-primary/20 transition-transform duration-200 lg:sticky lg:top-0 lg:translate-x-0">
             <div class="border-b border-white/10 bg-white/[0.03] px-5 py-5">
                 <div class="flex items-center gap-3">
-                    <div class="flex h-11 w-11 shrink-0 items-center justify-center bg-white p-1 shadow-lg shadow-black/10">
-                        <img src="{{ asset('images/logo.png') }}" alt="Holiday Travelers Inc." class="h-full w-full object-contain">
+                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white p-1 shadow-lg shadow-black/10">
+                        <img src="{{ asset('images/logo-transparent.png') }}" alt="Holiday Travelers Inc." class="h-full w-full object-contain">
                     </div>
                 <div class="sidebar-label leading-tight">
                         <p class="font-heading text-sm font-semibold tracking-tight">Holiday Travelers</p>
