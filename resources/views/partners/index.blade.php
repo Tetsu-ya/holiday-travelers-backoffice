@@ -4,7 +4,7 @@
 @section('content')
 <div class="space-y-6">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p class="text-xs font-semibold uppercase tracking-[0.2em] text-secondary">Partnerships</p><h2 class="mt-1 font-heading text-2xl font-semibold tracking-tight text-primary">Business partners</h2><p class="mt-2 text-sm text-gray-500">Manage agencies, corporate accounts, and affiliate relationships.</p></div><a href="{{ route('partners.create') }}" class="inline-flex items-center justify-center rounded-xl bg-secondary px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-secondary/20 transition hover:-translate-y-0.5">+ Add partner</a></div>
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="bg-card rounded-2xl border border-border border-t-4 border-t-primary p-4 shadow-sm">
             <div class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">Partners</div>
             <div class="mt-2 text-3xl font-heading font-semibold text-primary">{{ $partnerStats['total'] }}</div>
@@ -12,10 +12,6 @@
         <div class="bg-card rounded-2xl border border-border p-4 shadow-sm">
             <div class="text-xs text-gray-500">Top region</div>
             <div class="mt-2 text-3xl font-heading font-semibold text-primary">{{ $partnerStats['top_region'] }}</div>
-        </div>
-        <div class="bg-card rounded-2xl border border-border p-4 shadow-sm">
-            <div class="text-xs text-gray-500">Avg. commission</div>
-            <div class="mt-2 text-3xl font-heading font-semibold text-primary">{{ number_format($partnerStats['average_commission'], 2) }}%</div>
         </div>
         <div class="bg-card rounded-2xl border border-border p-4 shadow-sm">
             <div class="text-xs text-gray-500">Active</div>
@@ -37,7 +33,6 @@
                         <th class="px-5 py-3.5">Name</th>
                         <th class="px-5 py-3.5">Type</th>
                         <th class="px-5 py-3.5">Region</th>
-                        <th class="px-5 py-3.5">Commission</th>
                         <th class="px-5 py-3.5">Status</th>
                         <th class="px-5 py-3.5">Actions</th>
                     </tr>
@@ -48,7 +43,6 @@
                             <td class="px-5 py-4 font-medium text-primary">{{ $partner->name }}</td>
                             <td class="px-5 py-4"><span class="inline-flex rounded-full bg-primary/5 px-2.5 py-1 text-xs font-semibold capitalize text-primary">{{ $partner->type }}</span></td>
                             <td class="px-5 py-4"><div class="flex items-center gap-2 text-gray-600"><span class="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/10 text-xs text-accent">⌖</span><span>{{ $partner->region ?? 'Region not set' }}</span></div></td>
-                            <td class="px-5 py-4"><div class="min-w-24"><div class="mb-1 flex items-center justify-between gap-2"><span class="text-sm font-semibold text-primary">{{ number_format($partner->commission_rate ?? 0, 2) }}%</span><span class="text-[11px] text-gray-400">commission</span></div><div class="h-1.5 overflow-hidden rounded-full bg-gray-100"><div class="h-full rounded-full bg-secondary" style="width: {{ min($partner->commission_rate ?? 0, 100) }}%"></div></div></div></td>
                             <td class="px-5 py-4">
                                 <span class="px-2.5 py-1 rounded-full text-xs font-semibold
                                     @if (($partner->status ?? 'active') === 'active') bg-success/10 text-success
@@ -65,7 +59,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="6" class="py-10 text-center text-gray-400">No partners found.</td></tr>
+                        <tr><td colspan="5" class="py-10 text-center text-gray-400">No partners found.</td></tr>
                     @endforelse
                 </tbody>
             </table>

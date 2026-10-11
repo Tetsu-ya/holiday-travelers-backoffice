@@ -19,7 +19,6 @@
             <div><dt class="text-sm text-gray-500">Type</dt><dd class="font-medium capitalize">{{ $partner->type }}</dd></div>
             <div><dt class="text-sm text-gray-500">Region</dt><dd>{{ $partner->region ?: 'N/A' }}</dd></div>
             <div><dt class="text-sm text-gray-500">Contact person</dt><dd>{{ $partner->contact_person ?: 'N/A' }}</dd></div>
-            <div><dt class="text-sm text-gray-500">Commission</dt><dd>{{ $partner->commission_rate ?? 0 }}%</dd></div>
             <div><dt class="text-sm text-gray-500">Email</dt><dd>{{ $partner->email ?: 'N/A' }}</dd></div>
             <div><dt class="text-sm text-gray-500">Phone</dt><dd>{{ $partner->phone ?: 'N/A' }}</dd></div>
         </dl>

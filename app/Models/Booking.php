@@ -52,11 +52,6 @@ class Booking extends Model
         return $this->hasMany(BookingStatusHistory::class)->latest();
     }
 
-    public function partnerCommissions()
-    {
-        return $this->hasMany(PartnerCommission::class);
-    }
-
     public function documents()
     {
         return $this->morphMany(Document::class, 'related');

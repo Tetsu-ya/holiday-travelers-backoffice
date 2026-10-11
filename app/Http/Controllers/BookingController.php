@@ -7,7 +7,6 @@ use App\Models\BusinessPartner;
 use App\Models\DiscountCode;
 use App\Models\Invoice;
 use App\Models\Payment;
-use App\Models\PartnerCommission;
 use App\Models\TourPackage;
 use App\Support\Revenue;
 use Illuminate\Database\DatabaseManager;
@@ -109,7 +108,6 @@ class BookingController extends Controller
 
             $booking = Booking::create($bookingData);
             $discountCode?->increment('used_count');
-            $this->syncPartnerCommission($booking);
 
             return $booking;
         });
@@ -150,7 +148,6 @@ class BookingController extends Controller
         ]);
 
         $booking->update($data);
-        $this->syncPartnerCommission($booking->fresh());
         return redirect()->route('bookings.index')->with('success', 'Booking updated.');
     }
 
@@ -162,7 +159,6 @@ class BookingController extends Controller
             'payments',
             'invoices',
             'statusHistories.changedBy',
-            'partnerCommissions.partner',
             'documents',
         ]);
 
@@ -307,23 +303,4 @@ class BookingController extends Controller
         ]);
     }
 
-    protected function syncPartnerCommission(Booking $booking): void
-    {
-        $existing = PartnerCommission::where('booking_id', $booking->id)->first();
-        $rate = (float) ($booking->businessPartner?->commission_rate ?? 0);
-
-        if (!$booking->business_partner_id || $rate <= 0) {
-            PartnerCommission::where('booking_id', $booking->id)
-                ->whereIn('status', ['pending', 'approved'])
-                ->delete();
-            return;
-        }
-
-        $commission = $existing ?: new PartnerCommission(['status' => 'pending']);
-        $commission->booking_id = $booking->id;
-        $commission->partner_id = $booking->business_partner_id;
-        $commission->commission_rate = $rate;
-        $commission->commission_amount = round((float) $booking->total_amount * ($rate / 100), 2);
-        $commission->save();
-    }
 }

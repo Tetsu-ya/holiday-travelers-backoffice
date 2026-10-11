@@ -11,7 +11,7 @@ class BusinessPartner extends Model
 
     protected $fillable = [
         'name', 'type', 'contact_person', 'email', 'phone',
-        'region', 'commission_rate', 'status', 'performance_score',
+        'region', 'status', 'performance_score',
     ];
 
     public function bookings()

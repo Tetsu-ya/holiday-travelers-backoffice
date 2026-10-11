@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TourSchedule extends Model
 {
-    protected $fillable = ['tour_package_id', 'schedule_date', 'starts_at', 'ends_at', 'location', 'capacity', 'status', 'notes'];
+    protected $fillable = ['tour_package_id', 'schedule_date', 'starts_at', 'ends_at', 'location', 'destination', 'traffic_origin', 'capacity', 'status', 'notes'];
     protected $casts = ['schedule_date' => 'date'];
 
     public function tourPackage() { return $this->belongsTo(TourPackage::class); }

@@ -15,6 +15,7 @@
                 <th class="px-5 py-3">Type</th>
                 <th class="px-5 py-3">Price</th>
                 <th class="px-5 py-3">Status</th>
+                <th class="px-5 py-3">Planning</th>
                 <th class="px-5 py-3">Actions</th>
             </tr>
         </thead>
@@ -26,10 +27,12 @@
                     <td class="px-5 py-4"><span class="inline-flex rounded-full {{ $package->type === 'international' ? 'bg-secondary/10 text-secondary' : 'bg-primary/5 text-primary' }} px-2.5 py-1 text-xs font-semibold capitalize">{{ $package->type }}</span></td>
                     <td class="px-5 py-4"><span class="font-semibold text-primary">₱{{ number_format($package->price, 2) }}</span><span class="mt-0.5 block text-[11px] text-gray-400">per traveler</span></td>
                     <td class="px-5 py-4"><span class="rounded-full bg-success/10 px-2.5 py-1 text-xs font-semibold capitalize text-success">{{ $package->status }}</span></td>
+                    @php $booked = (int) ($package->booked_pax ?? 0); $open = max(0, (int) $package->slots - $booked); @endphp
+                    <td class="px-5 py-4"><div class="font-semibold text-primary">{{ $package->schedules_count }} departures</div><div class="mt-1 text-xs text-gray-400">{{ $open }} open slots · {{ $package->bookings_count }} bookings</div></td>
                     <td class="px-5 py-4"><a href="{{ route('packages.edit', $package) }}" class="text-xs font-medium text-secondary">Edit</a></td>
                 </tr>
             @empty
-                <tr><td colspan="5" class="px-5 py-8 text-center text-gray-400">No tour packages yet.</td></tr>
+                <tr><td colspan="7" class="px-5 py-8 text-center text-gray-400">No tour packages yet.</td></tr>
             @endforelse
         </tbody>
     </table></div>

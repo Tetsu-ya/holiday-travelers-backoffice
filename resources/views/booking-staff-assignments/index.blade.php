@@ -1,94 +1,19 @@
 @extends('layouts.app')
 @section('title', 'Staff Assignments')
-
 @section('content')
-<div class="max-w-7xl space-y-6">
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-secondary">People operations</p>
-            <h1 class="mt-1 font-heading text-2xl font-semibold tracking-tight text-primary">Staff assignments</h1>
-            <p class="mt-2 text-sm text-gray-500">Assign the right staff member to each client booking and track their readiness.</p>
-        </div>
-        <a href="{{ route('bookings.index') }}" class="rounded-xl border border-border px-4 py-2.5 text-sm font-semibold text-primary">View bookings</a>
-    </div>
-
-    <div class="rounded-2xl border border-border bg-card p-5 shadow-sm">
-        <h2 class="font-heading text-lg font-semibold text-primary">Assign staff to a booking</h2>
-        <p class="mt-1 text-sm text-gray-500">A booking can have multiple staff members with different responsibilities.</p>
-        <form method="POST" action="{{ route('booking-staff-assignments.store') }}" class="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-            @csrf
-            <select name="booking_id" required class="rounded-lg border border-border bg-card px-3 py-2 xl:col-span-2">
-                <option value="">Select client booking</option>
-                @foreach($bookingOptions as $booking)
-                    <option value="{{ $booking->id }}" @selected($selectedBooking === $booking->id)>{{ $booking->reference_no }} · {{ $booking->customer_name }} · {{ $booking->travel_date?->format('d M Y') }}</option>
-                @endforeach
-            </select>
-            <select name="user_id" required class="rounded-lg border border-border bg-card px-3 py-2">
-                <option value="">Select staff member</option>
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }}{{ $user->job_title ? ' · '.$user->job_title : '' }}</option>
-                @endforeach
-            </select>
-            <select name="assignment_role" required class="rounded-lg border border-border bg-card px-3 py-2">
-                <option value="">Select role</option>
-                <option value="travel_agent">Travel agent</option>
-                <option value="tour_guide">Tour guide</option>
-                <option value="driver">Driver</option>
-                <option value="coordinator">Tour coordinator</option>
-                <option value="visa_officer">Visa officer</option>
-                <option value="other">Other</option>
-            </select>
-            <select name="status" class="rounded-lg border border-border bg-card px-3 py-2">
-                <option value="assigned">Assigned</option>
-                <option value="confirmed">Confirmed</option>
-                <option value="completed">Completed</option>
-            </select>
-            <textarea name="notes" rows="1" placeholder="Notes (optional)" class="rounded-lg border border-border px-3 py-2 md:col-span-2 xl:col-span-4"></textarea>
-            <button class="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white">Assign staff</button>
-        </form>
-    </div>
-
-    <div class="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-        <div class="flex items-center justify-between gap-4 border-b border-border px-5 py-5">
-            <div><h2 class="font-heading text-lg font-semibold text-primary">Upcoming bookings</h2><p class="mt-1 text-sm text-gray-500">Manage the people assigned to each client trip.</p></div>
-            <span class="hidden rounded-full bg-secondary/10 px-3 py-1.5 text-xs font-semibold text-secondary sm:inline-flex">{{ $bookings->total() }} bookings</span>
-        </div>
-        <div class="overflow-x-auto">
-        <table class="w-full min-w-[680px] text-left text-sm">
-            <thead class="border-b border-border bg-background/70 text-[11px] font-semibold uppercase tracking-[0.16em] text-gray-500"><tr><th class="w-[28%] px-5 py-4">Booking</th><th class="w-[34%] px-5 py-4">Client / trip</th><th class="w-[38%] px-5 py-4">Assigned staff</th></tr></thead>
-            <tbody class="divide-y divide-border">
-                @forelse($bookings as $booking)
-                    <tr class="align-top transition-colors hover:bg-background/40">
-                        <td class="px-5 py-5"><a href="{{ route('bookings.show', $booking) }}" class="font-semibold tracking-tight text-secondary transition hover:text-accent">{{ $booking->reference_no }}</a><div class="mt-1.5 flex items-center gap-1.5 text-xs text-gray-500"><span class="h-1.5 w-1.5 rounded-full bg-accent"></span>{{ $booking->travel_date?->format('M d, Y') }}</div></td>
-                        <td class="px-5 py-5"><div class="font-semibold text-primary">{{ $booking->customer_name }}</div><div class="mt-1.5 max-w-[260px] truncate text-xs text-gray-500" title="{{ $booking->tourPackage->name ?? 'Package unavailable' }}">{{ $booking->tourPackage->name ?? 'Package unavailable' }} <span class="text-gray-600">·</span> {{ $booking->pax }} pax</div></td>
-                        <td class="px-5 py-5">
-                            @forelse($booking->staffAssignments as $assignment)
-                                <div class="group mb-2 flex items-center justify-between gap-3 rounded-xl border border-border bg-card px-3 py-3 shadow-sm transition hover:border-secondary/40 hover:shadow-md last:mb-0">
-                                    <div class="flex min-w-0 items-center gap-3">
-                                        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary/10 text-sm font-bold text-secondary">{{ str($assignment->user->name)->substr(0, 1)->upper() }}</span>
-                                        <div class="min-w-0">
-                                            <div class="truncate font-semibold text-primary">{{ $assignment->user->name }}</div>
-                                            <div class="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-gray-500">
-                                                <span class="capitalize">{{ str_replace('_', ' ', $assignment->assignment_role) }}</span>
-                                                <span class="h-1 w-1 rounded-full bg-gray-400"></span>
-                                                <span class="rounded-full bg-success/10 px-2 py-0.5 font-semibold capitalize text-success">{{ $assignment->status }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <form method="POST" action="{{ route('booking-staff-assignments.destroy', $assignment) }}" class="shrink-0">@csrf @method('DELETE')<button class="rounded-lg border border-error/20 px-2.5 py-1.5 text-xs font-semibold text-error transition hover:border-error/40 hover:bg-error/10 focus:outline-none focus:ring-4 focus:ring-error/10">Remove</button></form>
-                                </div>
-                            @empty
-                                <div class="flex items-center gap-2 text-gray-500"><span class="flex h-7 w-7 items-center justify-center rounded-full border border-dashed border-gray-600 text-xs">—</span><span>No staff assigned</span></div>
-                            @endforelse
-                        </td>
-                    </tr>
-                @empty
-                    <tr><td colspan="3" class="px-5 py-10 text-center text-gray-400">No upcoming bookings found.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
-        </div>
-        <div class="border-t border-border px-5 py-4">{{ $bookings->links() }}</div>
+<style>
+.staff-board{--orange:#f6a044;--blue:#173f70;--navy:#101827;--card:#1d2939;--stroke:#34445a;color:#f7fafc}.staff-board .eyebrow{color:var(--orange);font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase}.staff-board .dark-card{border:1px solid var(--stroke);background:var(--card);border-radius:16px}.staff-board .field{border:1px solid var(--stroke);border-radius:8px;background:#1a2535;color:#f9fafb;padding:.72rem .85rem;outline:0}.staff-board .field:focus{border-color:#5d8dc3;box-shadow:0 0 0 3px rgba(93,141,195,.18)}.staff-board .field::placeholder{color:#92a1b5}.staff-board .action{border-radius:8px;background:#17477f;color:#fff;padding:.72rem 1.1rem;font-size:.85rem;font-weight:700}.staff-board .action:hover{background:#205b99}.staff-board .table-head{background:#243247;color:#91a0b5;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.staff-board .pill{border-radius:999px;padding:.28rem .65rem;font-size:11px;font-weight:700}.staff-board .muted{color:#9aabc0}
+</style>
+<style>.staff-board .add-button{border-radius:12px;background:linear-gradient(135deg,#f6a044,#ed8b2e);color:#fff;padding:.75rem 1.15rem;font-size:.85rem;font-weight:800;box-shadow:0 9px 18px rgba(246,160,68,.24);transition:transform .18s,box-shadow .18s}.staff-board .add-button:hover{transform:translateY(-1px);box-shadow:0 12px 22px rgba(246,160,68,.3)}.staff-board .step-label{display:inline-flex;align-items:center;border-radius:999px;background:#254c79;color:#74b5e7;padding:.35rem .6rem;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}</style>
+<div class="staff-board -m-4 min-h-[calc(100vh-80px)] bg-[#101827] p-4 sm:-m-6 sm:p-6 lg:-m-8 lg:p-8">
+    <div class="mx-auto max-w-[1100px] space-y-5">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p class="eyebrow">People operations</p><h1 class="mt-2 font-heading text-3xl font-semibold tracking-tight">Staff assignments</h1><p class="mt-2 text-sm muted">Assign the right staff member to each tour departure and track readiness.</p></div><a href="{{ route('tour-availability.index') }}" class="rounded-lg border border-[#3a4a60] px-4 py-2.5 text-sm font-semibold text-white transition hover:border-[#6b8eb8] hover:bg-[#1b2b40]">View tour availability</a></div>
+        <div class="dark-card p-5 sm:p-6"><h2 class="font-heading text-lg font-semibold">Assign staff to a tour</h2><p class="mt-1 text-sm muted">A tour package can have multiple staff members with different responsibilities.</p><form method="POST" action="{{ route('booking-staff-assignments.store') }}" class="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-5">@csrf<select id="assignment-package" required class="field xl:col-span-2"><option value="">Select tour package</option>@foreach($packages as $package)<option value="{{ $package->id }}" @selected($selectedPackage === $package->id)>{{ $package->name }} · {{ $package->destination }}</option>@endforeach</select><select id="assignment-schedule" name="tour_schedule_id" required class="field xl:col-span-2"><option value="">Select package departure</option>@foreach($schedules as $schedule)<option value="{{ $schedule->id }}" data-package="{{ $schedule->tour_package_id }}">{{ $schedule->schedule_date->format('d M Y') }} · {{ $schedule->tourPackage->name }}</option>@endforeach</select><select name="user_id" required class="field"><option value="">Select staff member</option>@foreach($users as $user)<option value="{{ $user->id }}">{{ $user->name }}</option>@endforeach</select><select name="assignment_role" required class="field"><option value="">Select role</option><option value="tour_coordinator">Tour coordinator</option><option value="tour_guide">Tour guide</option><option value="driver">Driver</option><option value="travel_agent">Travel agent</option><option value="other">Other</option></select><select name="status" class="field"><option value="assigned">Assigned</option><option value="confirmed">Confirmed</option><option value="completed">Completed</option></select><textarea name="notes" rows="1" placeholder="Notes (optional)" class="field md:col-span-2 xl:col-span-4"></textarea><button class="action">Assign staff</button></form></div>
+        <div class="dark-card overflow-hidden"><div class="flex items-center justify-between gap-4 border-b border-[#34445a] px-5 py-5 sm:px-6"><div><h2 class="font-heading text-lg font-semibold">Upcoming tour departures</h2><p class="mt-1 text-sm muted">Manage the team assigned to each package trip.</p></div><span class="pill bg-[#3b342e] text-[#f6a044]">{{ $schedules->total() }} departures</span></div><div class="overflow-x-auto"><table class="w-full min-w-[900px] text-left text-sm"><thead class="table-head"><tr><th class="px-5 py-4">Tour package</th><th class="px-5 py-4">Departure</th><th class="px-5 py-4">Assigned staff</th><th class="px-5 py-4">Capacity</th><th class="px-5 py-4">Status</th></tr></thead><tbody class="divide-y divide-[#34445a]">@forelse($schedules as $schedule)<tr class="align-top transition hover:bg-[#223149]"><td class="px-5 py-5"><div class="font-semibold text-white">{{ $schedule->tourPackage->name }}</div><div class="mt-1 text-xs muted">{{ $schedule->tourPackage->destination }}</div></td><td class="px-5 py-5"><div class="font-medium text-white">{{ $schedule->schedule_date->format('D, d M Y') }}</div><div class="mt-1 text-xs muted">{{ $schedule->location ?: 'Location not set' }}</div></td><td class="px-5 py-5">@forelse($schedule->assignments as $assignment)<div class="mb-2 flex items-center justify-between gap-3 last:mb-0"><div><div class="font-semibold text-white">{{ $assignment->user->name }}</div><div class="text-xs capitalize muted">{{ str_replace('_',' ',$assignment->assignment_role) }}</div></div><form method="POST" action="{{ route('booking-staff-assignments.destroy', $assignment) }}">@csrf @method('DELETE')<button class="text-xs font-semibold text-red-300 hover:text-red-200">Remove</button></form></div>@empty<span class="text-sm muted">No staff assigned</span>@endforelse</td><td class="px-5 py-5"><span class="pill bg-[#203b53] text-[#75b5e5]">{{ number_format($schedule->capacity) }} seats</span></td><td class="px-5 py-5"><span class="pill bg-[#1f493e] text-[#65d19d]">{{ ucfirst($schedule->status) }}</span></td></tr>@empty<tr><td colspan="5" class="px-5 py-12 text-center muted">No upcoming tour departures found.</td></tr>@endforelse</tbody></table></div><div class="border-t border-[#34445a] px-5 py-4 sm:px-6">{{ $schedules->links() }}</div></div>
     </div>
 </div>
+<script>document.addEventListener('DOMContentLoaded',()=>{const p=document.getElementById('assignment-package'),s=document.getElementById('assignment-schedule');if(!p||!s)return;const sync=()=>{s.value='';[...s.options].forEach(o=>{if(o.dataset.package)o.hidden=o.dataset.package!==p.value;});};p.addEventListener('change',sync);sync();});</script>
+<script>document.addEventListener('DOMContentLoaded',()=>{const form=document.querySelector('form[action*="booking-staff-assignments"]');document.querySelector('a[href*="tour-availability"]')?.remove();if(!form)return;const card=form.closest('.dark-card');if(!card)return;const step=document.createElement('p');step.className='step-label mb-3';step.textContent='Step 2';const heading=card.querySelector('h2');heading?.parentElement?.insertBefore(step,heading);const button=document.createElement('button');button.type='button';button.className='add-button mt-5';button.textContent='+ Add staff';form.classList.add('hidden');form.parentElement.insertBefore(button,form);button.addEventListener('click',()=>{const closed=form.classList.toggle('hidden');button.textContent=closed?'+ Add staff':'− Close assignment';if(!closed)form.scrollIntoView({behavior:'smooth',block:'center'});});});</script>
+<script>document.addEventListener('DOMContentLoaded',()=>{const button=document.querySelector('.staff-board .add-button');if(!button)return;if(button.textContent.includes('Add staff'))button.textContent='Assign staff';button.addEventListener('click',()=>{if(button.textContent.includes('Add staff'))button.textContent='Assign staff';});});</script>
+<script>document.addEventListener('DOMContentLoaded',()=>{document.querySelector('.staff-board .step-label')?.remove();});</script>
 @endsection

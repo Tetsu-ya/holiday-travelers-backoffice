@@ -57,6 +57,15 @@
                 <input id="slots" type="number" name="slots" value="{{ old('slots', 0) }}" min="0" class="w-full rounded-lg border border-border px-3 py-2" placeholder="0">
             </div>
 
+            <div>
+                <label for="status" class="mb-1 block text-sm font-medium text-gray-700">Package status</label>
+                <select id="status" name="status" required class="w-full rounded-lg border border-border px-3 py-2">
+                    <option value="draft" @selected(old('status', 'published') === 'draft')>Draft</option>
+                    <option value="published" @selected(old('status', 'published') === 'published')>Published</option>
+                    <option value="archived" @selected(old('status') === 'archived')>Archived</option>
+                </select>
+            </div>
+
             <div class="md:col-span-2">
                 <label for="description" class="mb-1 block text-sm font-medium text-gray-700">Description</label>
                 <textarea id="description" name="description" rows="4" class="w-full rounded-lg border border-border px-3 py-2" placeholder="Describe the itinerary and inclusions">{{ old('description') }}</textarea>

@@ -19,5 +19,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'holidaytravelers@testexample.com',
         ]);
+
+        $this->call(TourPlanningSeeder::class);
     }
 }

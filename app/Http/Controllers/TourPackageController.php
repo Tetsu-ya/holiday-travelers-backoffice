@@ -9,7 +9,10 @@ class TourPackageController extends Controller
 {
     public function index()
     {
-        $packages = TourPackage::latest()->paginate(15);
+        $packages = TourPackage::with(['schedules.assignments.user'])
+            ->withCount(['schedules', 'bookings'])
+            ->withSum(['bookings as booked_pax' => fn ($query) => $query->whereIn('status', ['pending', 'confirmed'])], 'pax')
+            ->latest()->paginate(15);
         return view('packages.index', compact('packages'));
     }
 
@@ -23,6 +26,7 @@ class TourPackageController extends Controller
             'price' => 'required|numeric|min:0',
             'duration_days' => 'required|integer|min:1',
             'slots' => 'nullable|integer|min:0',
+            'status' => 'required|in:draft,published,archived',
         ]);
 
         TourPackage::create($data);
@@ -41,7 +45,13 @@ class TourPackageController extends Controller
 
     public function update(Request $request, TourPackage $package)
     {
-        $package->update($request->all());
+        $data = $request->validate([
+            'name' => 'required|string|max:255', 'type' => 'required|in:domestic,international',
+            'destination' => 'required|string|max:255', 'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0', 'duration_days' => 'required|integer|min:1',
+            'slots' => 'nullable|integer|min:0', 'status' => 'required|in:draft,published,archived',
+        ]);
+        $package->update($data);
         return redirect()->route('packages.index')->with('success', 'Tour package updated.');
     }
 

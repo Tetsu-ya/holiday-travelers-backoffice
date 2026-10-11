@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="space-y-6">
-    <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p class="text-xs font-semibold uppercase tracking-[0.2em] text-secondary">Marketing operations</p><h2 class="mt-1 font-heading text-2xl font-semibold tracking-tight text-primary">Marketing campaigns</h2><p class="mt-2 text-sm text-gray-500">Track performance across paid, organic, referral, and email channels.</p></div><a href="{{ route('campaigns.create') }}" class="inline-flex items-center justify-center rounded-xl bg-secondary px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-secondary/20 transition hover:-translate-y-0.5">+ New campaign</a></div>
+    <div><p class="text-xs font-semibold uppercase tracking-[0.2em] text-secondary">Marketing operations</p><h2 class="mt-1 font-heading text-2xl font-semibold tracking-tight text-primary">Marketing campaigns</h2><p class="mt-2 text-sm text-gray-500">Track performance across social media, paid, referral, and email channels.</p></div>
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="bg-card rounded-2xl border border-border border-t-4 border-t-primary p-4 shadow-sm">
             <div class="text-xs font-semibold uppercase tracking-[0.12em] text-gray-500">Active campaigns</div>

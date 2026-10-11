@@ -63,6 +63,7 @@ Route::middleware(['auth', 'permission'])->group(function () {
     // Tour availability and resource planning
     Route::get('tour-schedule', [TourPlanningController::class, 'schedule'])->name('tour-schedule.index');
     Route::post('tour-schedule', [TourPlanningController::class, 'storeSchedule'])->name('tour-schedule.store');
+    Route::post('tour-schedule/{schedule}/traffic-origin', [TourPlanningController::class, 'updateTrafficOrigin'])->name('tour-schedule.traffic-origin');
     Route::get('tour-availability', [TourPlanningController::class, 'availability'])->name('tour-availability.index');
     Route::get('resource-allocation', [TourPlanningController::class, 'allocation'])->name('resource-allocation.index');
     Route::post('resource-allocation', [TourPlanningController::class, 'storeAllocation'])->name('resource-allocation.store');
@@ -91,15 +92,13 @@ Route::middleware(['auth', 'permission'])->group(function () {
     Route::post('discount-codes', [MarketingOperationsController::class, 'storeDiscountCode'])->name('discount-codes.store');
     Route::get('marketing-calendar', [MarketingOperationsController::class, 'calendar'])->name('marketing-calendar.index');
     Route::get('campaign-analytics', [MarketingOperationsController::class, 'analytics'])->name('campaign-analytics.index');
+    Route::post('marketing-brochures', [MarketingOperationsController::class, 'storeBrochure'])->name('marketing-brochures.store');
+    Route::get('marketing-brochures/{brochure}/preview', [MarketingOperationsController::class, 'previewBrochure'])->name('marketing-brochures.preview');
+    Route::get('marketing-brochures/{brochure}/download', [MarketingOperationsController::class, 'downloadBrochure'])->name('marketing-brochures.download');
+    Route::delete('marketing-brochures/{brochure}', [MarketingOperationsController::class, 'destroyBrochure'])->name('marketing-brochures.destroy');
 
     // Financial operations
     Route::get('revenue', [FinancialOperationsController::class, 'revenue'])->name('revenue.index');
-    Route::get('expenses', [FinancialOperationsController::class, 'expenses'])->name('expenses.index');
-    Route::post('expenses', [FinancialOperationsController::class, 'storeExpense'])->name('expenses.store');
-    Route::get('commissions', [FinancialOperationsController::class, 'commissions'])->name('commissions.index');
-    Route::post('commissions/{commission}/approve', [FinancialOperationsController::class, 'approveCommission'])->name('commissions.approve');
-    Route::post('commissions/{commission}/mark-paid', [FinancialOperationsController::class, 'markCommissionPaid'])->name('commissions.mark-paid');
-    Route::get('analytics-dashboard', [FinancialOperationsController::class, 'analytics'])->name('analytics-dashboard.index');
 
     // Document and visa assistance
     Route::get('customer-documents', [DocumentOperationsController::class, 'documents'])->name('customer-documents.index');
@@ -128,14 +127,18 @@ Route::middleware(['auth', 'permission'])->group(function () {
     Route::resource('suppliers', SupplierController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
 
     // Marketing
+    Route::post('marketing/campaigns', [\App\Http\Controllers\MarketingCampaignController::class, 'store'])->name('campaigns.store');
     Route::resource('marketing/campaigns', \App\Http\Controllers\MarketingCampaignController::class)
-        ->parameters(['campaigns' => 'campaign'])->names('campaigns');
+        ->parameters(['campaigns' => 'campaign'])
+        ->names('campaigns')
+        ->except(['store']);
     Route::resource('marketing/leads', \App\Http\Controllers\LeadController::class)
         ->parameters(['leads' => 'lead'])->names('leads');
 
     // AI-Assisted Resource Planning
     Route::get('ai-planning', [AIResourcePlanningController::class, 'index'])->name('ai-planning.index');
     Route::post('ai-planning/forecast-demand', [AIResourcePlanningController::class, 'forecastDemand'])->name('ai-planning.forecast-demand');
+    Route::post('ai-planning/travel-readiness', [AIResourcePlanningController::class, 'assessReadiness'])->name('ai-planning.travel-readiness');
     Route::post('ai-planning/recommend-supplier', [AIResourcePlanningController::class, 'recommendSupplier'])->name('ai-planning.recommend-supplier');
     Route::post('ai-planning/recommend-marketing-budget', [AIResourcePlanningController::class, 'recommendMarketingBudget'])->name('ai-planning.recommend-budget');
 

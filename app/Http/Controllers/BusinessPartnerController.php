@@ -17,7 +17,6 @@ class BusinessPartnerController extends Controller
                 ->groupBy('region')
                 ->orderByRaw('COUNT(*) DESC')
                 ->value('region') ?? 'N/A',
-            'average_commission' => BusinessPartner::avg('commission_rate') ?? 0,
             'active' => BusinessPartner::where('status', 'active')->count(),
         ];
 
@@ -38,7 +37,6 @@ class BusinessPartnerController extends Controller
             'email' => 'nullable|email',
             'phone' => 'nullable|string|max:50',
             'region' => 'nullable|string|max:255',
-            'commission_rate' => 'nullable|numeric|min:0|max:100',
         ]);
 
         $data['status'] = 'active';
@@ -65,7 +63,6 @@ class BusinessPartnerController extends Controller
             'email' => 'nullable|email',
             'phone' => 'nullable|string|max:50',
             'region' => 'nullable|string|max:255',
-            'commission_rate' => 'nullable|numeric|min:0|max:100',
         ]);
 
         $partner->update($data);

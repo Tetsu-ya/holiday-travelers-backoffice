@@ -723,4 +723,32 @@
 	.dark .hover\:bg-gray-50:hover {
 		background-color: #374151;
 	}
+
+	.dark .marketing-hub .bg-slate-50,
+	.dark .marketing-hub .bg-slate-100 {
+		background-color: #273449;
+	}
+
+	.dark .marketing-hub .border-slate-200 {
+		border-color: #374151;
+	}
+
+	.dark .marketing-hub .text-slate-800,
+	.dark .marketing-hub .text-slate-900 {
+		color: #f3f4f6;
+	}
+
+	.dark .marketing-hub .text-slate-600,
+	.dark .marketing-hub .text-slate-700 {
+		color: #d1d5db;
+	}
+
+	.dark .marketing-hub .text-slate-400,
+	.dark .marketing-hub .text-slate-500 {
+		color: #9ca3af;
+	}
+
+	.dark .marketing-hub .hover\:bg-slate-50:hover {
+		background-color: #273449;
+	}
 }

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
-use App\Models\BookingStaffAssignment;
+use App\Models\StaffAssignment;
+use App\Models\TourPackage;
+use App\Models\TourSchedule;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -11,66 +12,59 @@ class BookingStaffAssignmentController extends Controller
 {
     public function index(Request $request)
     {
-        $bookings = Booking::with(['tourPackage', 'staffAssignments.user'])
-            ->whereIn('status', ['pending', 'confirmed'])
-            ->orderBy('travel_date')
-            ->paginate(15);
+        $selectedPackage = $request->integer('package_id') ?: null;
+        $schedules = TourSchedule::with(['tourPackage', 'assignments.user'])
+            ->whereDate('schedule_date', '>=', today())
+            ->when($selectedPackage, fn ($query) => $query->where('tour_package_id', $selectedPackage))
+            ->orderBy('schedule_date')->paginate(15)->withQueryString();
 
         return view('booking-staff-assignments.index', [
-            'bookings' => $bookings,
-            'bookingOptions' => Booking::with('tourPackage')
-                ->whereNotIn('status', ['cancelled', 'refunded'])
-                ->orderBy('travel_date')
-                ->get(),
+            'schedules' => $schedules,
+            'packages' => TourPackage::where('status', 'published')->orderBy('name')->get(),
             'users' => $this->staffUsers(),
-            'selectedBooking' => $request->integer('booking_id') ?: null,
+            'selectedPackage' => $selectedPackage,
         ]);
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'booking_id' => 'required|exists:bookings,id',
+            'tour_schedule_id' => 'required|exists:tour_schedules,id',
             'user_id' => 'required|exists:users,id',
             'assignment_role' => 'required|string|max:100',
-            'status' => 'required|in:assigned,confirmed,completed,cancelled',
+            'status' => 'required|in:assigned,confirmed,completed',
             'notes' => 'nullable|string|max:2000',
         ]);
 
-        BookingStaffAssignment::updateOrCreate(
-            ['booking_id' => $data['booking_id'], 'user_id' => $data['user_id'], 'assignment_role' => $data['assignment_role']],
-            ['status' => $data['status'], 'notes' => $data['notes'] ?? null]
+        StaffAssignment::updateOrCreate(
+            ['tour_schedule_id' => $data['tour_schedule_id'], 'user_id' => $data['user_id']],
+            ['assignment_role' => $data['assignment_role'], 'status' => $data['status'], 'notes' => $data['notes'] ?? null]
         );
 
-        return back()->with('success', 'Staff member assigned to the booking.');
+        return back()->with('success', 'Staff member assigned to the tour departure.');
     }
 
-    public function update(Request $request, BookingStaffAssignment $assignment)
+    public function update(Request $request, StaffAssignment $assignment)
     {
-        $data = $request->validate([
-            'status' => 'required|in:assigned,confirmed,completed,cancelled',
+        $assignment->update($request->validate([
+            'assignment_role' => 'required|string|max:100',
+            'status' => 'required|in:assigned,confirmed,completed',
             'notes' => 'nullable|string|max:2000',
-        ]);
+        ]));
 
-        $assignment->update($data);
-
-        return back()->with('success', 'Booking assignment updated.');
+        return back()->with('success', 'Tour staff assignment updated.');
     }
 
-    public function destroy(BookingStaffAssignment $assignment)
+    public function destroy(StaffAssignment $assignment)
     {
         $assignment->delete();
-
-        return back()->with('success', 'Staff member removed from the booking.');
+        return back()->with('success', 'Staff member removed from the tour.');
     }
 
     private function staffUsers()
     {
         return User::whereIn('role', ['admin', 'manager', 'agent', 'tour_guide', 'driver', 'staff'])
-            ->where(function ($query) {
-                $query->whereNull('status')->orWhere('status', 'active');
-            })
-            ->orderBy('name')
-            ->get();
+            ->where(fn ($query) => $query->whereNull('status')->orWhere('status', 'active'))
+            ->orderBy('name')->get();
     }
 }

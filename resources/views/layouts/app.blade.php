@@ -80,24 +80,15 @@
                             'icon' => '🗺️',
                             'children' => [
                                 ['Tour Packages', 'packages.index'],
-                                ['Bookings', 'bookings.index'],
-                                ['Tour Schedule', 'tour-schedule.index'],
-                                ['Availability', 'tour-availability.index'],
                                 ['Resource Allocation', 'resource-allocation.index'],
-                                ['Resource Calendar', 'resource-calendar.index'],
                                 ['AI Resource Planning', 'ai-planning.index'],
-                                ['Payment Methods', 'payment-methods.index'],
                             ],
                         ],
                         [
                             'label' => 'Marketing & Promotions',
                             'icon' => '📣',
                             'children' => [
-                                ['Campaigns', 'campaigns.index'],
-                                ['Promotions', 'promotions.index'],
-                                ['Discount Codes', 'discount-codes.index'],
-                                ['Marketing Calendar', 'marketing-calendar.index'],
-                                ['Campaign Analytics', 'campaign-analytics.index'],
+                                ['Marketing Hub', 'campaign-analytics.index'],
                             ],
                         ],
                         [
@@ -105,10 +96,7 @@
                             'icon' => '💰',
                             'children' => [
                                 ['Revenue', 'revenue.index'],
-                                ['Expenses', 'expenses.index'],
-                                ['Commissions', 'commissions.index'],
                                 ['Financial Reports', 'reports.index'],
-                                ['Analytics Dashboard', 'analytics-dashboard.index'],
                             ],
                         ],
                         [

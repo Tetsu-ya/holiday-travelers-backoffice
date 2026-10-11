@@ -35,10 +35,6 @@
                 <label class="mb-1 block text-sm font-medium text-gray-700">Region</label>
                 <input type="text" name="region" class="w-full rounded-lg border border-border px-3 py-2" placeholder="Metro Manila">
             </div>
-            <div class="md:col-span-2">
-                <label class="mb-1 block text-sm font-medium text-gray-700">Commission rate (%)</label>
-                <input type="number" step="0.01" min="0" max="100" name="commission_rate" class="w-full rounded-lg border border-border px-3 py-2" value="0">
-            </div>
         </div>
 
         <div class="flex gap-3">

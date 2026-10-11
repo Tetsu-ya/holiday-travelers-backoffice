@@ -37,17 +37,17 @@ The Back Office is the **internal control panel** for a travel agency. Staff log
 
 - Create and manage **tour packages** (domestic / international) with pricing, slots and duration.
 - Capture and track **bookings** through their full lifecycle, with payments, invoices and receipts.
-- Manage **business partners** (agencies, corporate accounts, affiliates) and their commissions.
+- Manage **business partners** (agencies, corporate accounts, affiliates).
 - Manage **suppliers** (hotels, airlines, transport, tour guides), their contracts, rates and availability.
 - Plan and track **marketing campaigns**, promotions, discount codes and leads.
 - Manage **staff** — profiles, tasks, scheduling, performance and commissions — plus role permissions.
 - Handle **documents and visa assistance** for customers.
-- View **financials** — revenue, expenses, commissions — and generate **reports**.
+- View **revenue** and generate **financial reports**.
 - Consume **AI recommendations** for demand forecasting, supplier allocation and marketing budget.
 
 Everything revolves around the **booking**. A booking links a customer to a tour
-package, optionally to a business partner (who earns a commission), and accumulates
-payments and invoices. Most other modules feed into or read from that central workflow.
+package, optionally to a business partner, and accumulates payments and invoices.
+Most other modules feed into or read from that central workflow.
 
 ---
 
@@ -173,7 +173,7 @@ Roles are stored on `users.role`: **admin, manager, agent, staff**.
 | `partners.`, `suppliers.`, `supplier-*.` | `manage_partners` |
 | `campaigns.`, `leads.`, `promotions.`, `discount-codes.` | `manage_marketing` |
 | `staff-profiles.`, `tasks.`, `roles-permissions.` | `manage_staff` |
-| `reports.`, `revenue.`, `expenses.`, `commissions.` | `view_reports` |
+| `reports.`, `revenue.` | `view_reports` |
 | `customer-documents.`, `visa-*.`, `document-*.` | `manage_documents` |
 
 Routes whose workflows aren't finished yet resolve to a navigation placeholder
@@ -204,17 +204,14 @@ database transaction**:
 3. Computes the discount (percentage or fixed), clamps it to the subtotal, and writes
    `subtotal_amount`, `discount_amount` and `total_amount`.
 4. Generates a unique reference (`HTI-…`) and **increments the discount code's usage count**.
-5. **Syncs the partner commission** for the booking.
 
 Bookings can be filtered by travel month/year, paid month/year and status. Each
 booking has a **finance page** where staff record payments, generate invoices and
 print receipts, and delete payments. Payments feed directly into the revenue figures.
 
 ### Business Partners (`BusinessPartnerController`)
-Directory of agencies / corporate accounts / affiliates, with commission rates and
-status. `PartnerCommission` records are created and kept in sync from bookings, and
-are later approved / marked paid on the **Commissions** page (which drives the
-"partners paid" figure in reports).
+Directory of agencies / corporate accounts / affiliates, with contact details and
+status.
 
 ### Suppliers (`SupplierController`, `SupplierOperationsController`)
 Supplier directory (hotels, airlines, transport, guides) with base rates, reliability
@@ -243,18 +240,19 @@ assigned staff, and are used by the AI engine to detect upcoming tours that are
 under-resourced or missing staff.
 
 ### Financial Operations (`FinancialOperationsController`)
-Revenue view, **expenses** (create + list), **commissions** (approve / mark paid) and
-an analytics dashboard. All revenue math delegates to `Support\Revenue`.
+The **Revenue** view lists received payments and shows refunds and outstanding
+balances. Financial Reports provide a date-filtered cash-revenue summary and CSV
+export. Expense entry, partner commission management, and the separate analytics
+dashboard have been removed; existing database records are retained.
 
 ### Documents & Visa Assistance (`DocumentOperationsController`)
 Customer **documents**, **visa applications**, **visa requirements**, a **document
 checklist**, **document expiration** tracking and **visa status** tracking.
 
 ### Reports (`ReportController`)
-Aggregated business reporting: total revenue, refunds, partner commissions paid,
-campaign spend, net margin, monthly revenue series and channel conversions. Two
-**CSV exports** are available (bookings export and financial export) via
-`response()->streamDownload()`.
+Financial reporting uses payments marked paid or partial, less refunds, grouped by
+payment date; booking counts use booking creation date. Two **CSV exports** are
+available (bookings export and financial export) via `response()->streamDownload()`.
 
 ### Module placeholders
 Navigation entries whose full workflow is scheduled for a later release route to
@@ -361,12 +359,13 @@ Core tables (from `database/migrations`):
   `role_permissions`, `cache`, sessions.
 - **Core operations:** `tour_packages`, `bookings`, `booking_status_histories`,
   `payments`, `invoices`, `payment-methods`.
-- **Partners & suppliers:** `business_partners`, `partner_commissions`, `suppliers`,
+- **Partners & suppliers:** `business_partners`, `partner_commissions` (legacy records),
+  `suppliers`,
   `supplier_contracts`, `supplier_rates`, `supplier_availability`, `supplier_performance`.
 - **Marketing:** `marketing_campaigns`, `leads`, `promotions`, `discount_codes`.
 - **Staff:** `staff_*` (tasks, schedules, commissions, performance).
 - **Tour planning:** `tour_schedules`, `resource_allocations`, `staff_assignments`.
-- **Finance:** `expenses`.
+- **Finance:** `expenses` (legacy records).
 - **Documents/visa:** `documents`, `visa_applications`, `visa_requirements`.
 - **AI:** `ai_resource_plans`.
 

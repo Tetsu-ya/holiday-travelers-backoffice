@@ -2,6 +2,10 @@
 
 return [
 
+    'http' => [
+        'ca_bundle' => env('HTTP_CA_BUNDLE', 'C:\\xampp\\apache\\bin\\curl-ca-bundle.crt'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
@@ -47,6 +51,23 @@ return [
             'strtolower',
             array_map('trim', explode(',', env('GOOGLE_ALLOWED_EMAILS', ''))),
         ))),
+    ],
+
+    'maps' => [
+        'key' => env('GOOGLE_MAPS_API_KEY'),
+        'origin' => env('GOOGLE_MAPS_ORIGIN', 'Manila, Philippines'),
+    ],
+
+    'tomtom' => [
+        'key' => env('TOMTOM_API_KEY'),
+        'origin' => env('TOMTOM_ORIGIN', 'Manila, Philippines'),
+        'routing_url' => env('TOMTOM_ROUTING_URL', 'https://api.tomtom.com/routing/1/calculateRoute'),
+        'search_url' => env('TOMTOM_SEARCH_URL', 'https://api.tomtom.com/search/2/search'),
+    ],
+
+    'weather' => [
+        'base_url' => env('WEATHER_BASE_URL', 'https://api.open-meteo.com/v1/forecast'),
+        'geocoding_url' => env('WEATHER_GEOCODING_URL', 'https://geocoding-api.open-meteo.com/v1/search'),
     ],
 
 ];

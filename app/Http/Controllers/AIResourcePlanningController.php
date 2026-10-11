@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\AiResourcePlan;
 use App\Models\TourPackage;
+use App\Models\TourSchedule;
 use App\Services\AIResourcePlanningService;
+use App\Services\TravelReadinessService;
 use Illuminate\Http\Request;
 
 class AIResourcePlanningController extends Controller
@@ -21,7 +23,21 @@ class AIResourcePlanningController extends Controller
                 ->get();
         }
 
-        return view('ai-planning.index', compact('plans', 'packages'));
+        $schedules = TourSchedule::with('tourPackage')
+            ->whereDate('schedule_date', '>=', today())
+            ->whereIn('status', ['planned', 'confirmed'])
+            ->orderBy('schedule_date')->get();
+
+        return view('ai-planning.index', compact('plans', 'packages', 'schedules'));
+    }
+
+    public function assessReadiness(Request $request, TravelReadinessService $readiness)
+    {
+        $schedule = TourSchedule::with('tourPackage')->findOrFail($request->validate([
+            'schedule_id' => ['required', 'integer', 'exists:tour_schedules,id'],
+        ])['schedule_id']);
+
+        return back()->with('travel_readiness', $readiness->assess($schedule));
     }
 
     public function forecastDemand(Request $request, AIResourcePlanningService $ai)

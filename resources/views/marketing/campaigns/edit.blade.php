@@ -15,7 +15,7 @@
             <div>
                 <label class="mb-1 block text-sm font-medium text-gray-700">Channel</label>
                 <select name="channel" class="w-full rounded-lg border border-border px-3 py-2">
-                    @foreach(['email','social_media','referral','ads','events'] as $channel)
+                    @foreach(['email', 'facebook', 'instagram', 'tiktok', ...($campaign->channel === 'social_media' ? ['social_media'] : []), 'referral', 'ads', 'events'] as $channel)
                         <option value="{{ $channel }}" {{ $campaign->channel === $channel ? 'selected' : '' }}>{{ ucfirst(str_replace('_', ' ', $channel)) }}</option>
                     @endforeach
                 </select>
@@ -26,6 +26,15 @@
                     <option value="">Select package</option>
                     @foreach (\App\Models\TourPackage::orderBy('name')->get() as $package)
                         <option value="{{ $package->id }}" {{ $campaign->tour_package_id == $package->id ? 'selected' : '' }}>{{ $package->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="md:col-span-2">
+                <label for="marketing_brochure_id" class="mb-1 block text-sm font-medium text-gray-700">Promotional brochure</label>
+                <select id="marketing_brochure_id" name="marketing_brochure_id" class="w-full rounded-lg border border-border px-3 py-2">
+                    <option value="">No brochure attached</option>
+                    @foreach ($brochures as $brochure)
+                        <option value="{{ $brochure->id }}" @selected((string) old('marketing_brochure_id', $campaign->marketing_brochure_id) === (string) $brochure->id)>{{ $brochure->title }} — {{ $brochure->file_name }}</option>
                     @endforeach
                 </select>
             </div>

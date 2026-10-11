@@ -23,6 +23,11 @@ class TourPackage extends Model
     {
         return $this->hasMany(Booking::class);
     }
+
+    public function schedules()
+    {
+        return $this->hasMany(TourSchedule::class);
+    }
         public function scopePublished($query)
     {
         return $query->where('status', 'published');
