@@ -148,7 +148,7 @@
         <section class="dash-card">
             <div class="dash-panel-head">
                 <div><h3 class="dash-panel-title">Assigned Staff</h3><p class="dash-panel-caption">Team members on upcoming departures</p></div>
-                <a class="dash-link" href="{{ route('staff-assignment.index') }}">Manage &rarr;</a>
+                <a class="dash-link" href="{{ route('staff-assignment.index') }}">Staff assignments &rarr;</a>
             </div>
             <div class="dash-list">
                 @forelse ($assignedStaff as $assignment)
@@ -156,7 +156,7 @@
                         <span class="dash-person-avatar" aria-hidden="true">{{ strtoupper(substr($assignment->user?->name ?? '?', 0, 1)) }}</span>
                         <div class="dash-item-main">
                             <div class="dash-item-title">{{ $assignment->user?->name ?? 'Staff member' }}</div>
-                            <div class="dash-item-sub">{{ ucfirst(str_replace('_', ' ', $assignment->assignment_role)) }} · {{ $assignment->tourSchedule?->tourPackage?->name ?? 'Tour' }}</div>
+                            <div class="dash-item-sub">{{ ucfirst(str_replace('_', ' ', $assignment->assignment_role)) }} · {{ $assignment->tourSchedule?->tourPackage?->name ?? 'Tour package unavailable' }}</div>
                         </div>
                         <span class="dash-pill status-{{ $assignment->status }}">{{ ucfirst($assignment->status) }}</span>
                     </div>

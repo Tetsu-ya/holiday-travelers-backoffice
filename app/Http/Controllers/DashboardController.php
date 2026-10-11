@@ -30,7 +30,9 @@ class DashboardController extends Controller
             'revenue_this_month' => Revenue::collectedForMonth($month, $year),
         ];
 
-        $upcomingTours = TourSchedule::with(['tourPackage', 'assignments.user'])
+        $upcomingTours = TourSchedule::with(['tourPackage', 'assignments' => fn ($query) => $query
+            ->with('user')
+            ->whereIn('status', ['assigned', 'confirmed'])])
             ->whereDate('schedule_date', '>=', today())
             ->whereIn('status', ['planned', 'confirmed'])
             ->orderBy('schedule_date')
@@ -38,8 +40,7 @@ class DashboardController extends Controller
             ->get();
         $assignedStaff = $upcomingTours
             ->flatMap(fn (TourSchedule $schedule) => $schedule->assignments
-                ->whereIn('status', ['assigned', 'confirmed'])
-                ->map(fn ($assignment) => $assignment->setRelation('tourSchedule', $schedule)))
+                ->map(fn (StaffAssignment $assignment) => $assignment->setRelation('tourSchedule', $schedule)))
             ->take(4);
         $packages = TourPackage::withCount([
             'bookings as sold_bookings' => fn ($query) => $query
