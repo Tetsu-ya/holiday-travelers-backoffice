@@ -178,7 +178,7 @@
 
         {{-- Main --}}
         <div class="flex min-w-0 flex-1 flex-col overflow-y-auto">
-            <header class="sticky top-0 z-20 flex items-center justify-between border-b border-border bg-card/95 px-4 py-4 shadow-sm backdrop-blur-md dark:bg-gray-800/95 sm:px-6 lg:px-8">
+            <header class="sticky top-0 z-20 flex items-center justify-between border-b px-4 py-4 shadow-sm backdrop-blur-md sm:px-6 lg:px-8 {{ request()->routeIs('dashboard') ? 'dashboard-shell-header border-gray-200 bg-[#f1f5f9]/95' : 'border-border bg-card/95 dark:bg-gray-800/95' }}">
                 <div class="flex min-w-0 items-center gap-3">
                     <button type="button" id="sidebar-toggle" aria-label="Open navigation" title="Open navigation"
                             class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#2b67a2] bg-[#17477f] text-white shadow-lg shadow-primary/25 transition hover:bg-[#205b99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 active:scale-95 lg:hidden">
@@ -197,8 +197,8 @@
                         </svg>
                     </button>
                     <div class="min-w-0">
-                    <p class="mb-1 hidden text-[11px] font-semibold uppercase tracking-[0.18em] text-gray-400 sm:block">Holiday Travelers / Back Office</p>
-                    <h1 class="truncate font-heading text-lg font-semibold text-primary">@yield('title', 'Dashboard')</h1>
+                    <p class="mb-1 hidden text-[11px] font-semibold uppercase tracking-[0.18em] sm:block {{ request()->routeIs('dashboard') ? 'dashboard-shell-header-label text-gray-500' : 'text-gray-400' }}">Holiday Travelers / Back Office</p>
+                    <h1 class="truncate font-heading text-lg font-semibold {{ request()->routeIs('dashboard') ? 'dashboard-shell-header-title text-primary' : 'text-primary' }}">@yield('title', 'Dashboard')</h1>
                     </div>
                 </div>
                 <div class="flex shrink-0 items-center gap-3">
@@ -207,7 +207,7 @@
                         System online
                     </span>
                     <button type="button" id="theme-toggle" aria-label="Switch to dark mode" title="Switch to dark mode"
-                            class="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-primary transition hover:bg-gray-50">
+                            class="flex h-9 w-9 items-center justify-center rounded-lg border text-primary transition hover:bg-gray-50 {{ request()->routeIs('dashboard') ? 'dashboard-shell-theme-toggle border-gray-300' : 'border-border' }}">
                         <span id="theme-icon" aria-hidden="true">☾</span>
                     </button>
                     <form method="POST" action="{{ Route::has('logout') ? route('logout') : '#' }}">
@@ -219,13 +219,13 @@
                 </div>
             </header>
 
-            <main class="flex-1 bg-[radial-gradient(circle_at_top_right,_rgba(111,169,230,0.10),_transparent_32rem)] p-4 sm:p-6 lg:p-8">
+            <main class="flex-1 {{ request()->routeIs('dashboard') ? 'dashboard-shell-main bg-[#f1f5f9] p-0' : 'bg-[radial-gradient(circle_at_top_right,_rgba(111,169,230,0.10),_transparent_32rem)] p-4 sm:p-6 lg:p-8' }}">
                 @if (session('success'))
                     <div class="mb-4 px-4 py-3 rounded-lg bg-success/10 text-success border border-success/30 text-sm">
                         {{ session('success') }}
                     </div>
                 @endif
-                <div class="mx-auto w-full max-w-[1600px]">
+                <div class="mx-auto w-full {{ request()->routeIs('dashboard') ? 'max-w-none' : 'max-w-[1600px]' }}">
                     @yield('content')
                 </div>
             </main>
