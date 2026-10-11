@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
+use App\Models\BusinessPartner;
 use App\Models\StaffAssignment;
+use App\Models\Supplier;
 use App\Models\TourPackage;
 use App\Models\TourSchedule;
 use App\Support\Revenue;
@@ -50,14 +51,32 @@ class DashboardController extends Controller
             ->latest()
             ->limit(4)
             ->get();
-        $recentBookings = Booking::with('tourPackage')->latest()->limit(5)->get();
+        $directoryEntries = Supplier::query()
+            ->latest()
+            ->limit(5)
+            ->get()
+            ->each(function (Supplier $supplier) {
+                $supplier->setAttribute('directory_type', 'Supplier');
+                $supplier->setAttribute('directory_category', str_replace('_', ' ', ucfirst($supplier->category)));
+            })
+            ->concat(BusinessPartner::query()
+                ->latest()
+                ->limit(5)
+                ->get()
+                ->each(function (BusinessPartner $partner) {
+                    $partner->setAttribute('directory_type', 'Partner');
+                    $partner->setAttribute('directory_category', str_replace('_', ' ', ucfirst($partner->type)));
+                }))
+            ->sortByDesc('created_at')
+            ->take(5)
+            ->values();
 
         return view('dashboard.index', compact(
             'kpis',
             'upcomingTours',
             'assignedStaff',
             'packages',
-            'recentBookings',
+            'directoryEntries',
         ));
     }
 }

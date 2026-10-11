@@ -18,7 +18,8 @@
     .dash-date{display:flex;align-items:center;gap:.7rem;border:1px solid var(--dash-line);border-radius:.85rem;background:var(--dash-panel);padding:.65rem .9rem;color:#d5e2f3;font-size:.75rem}
     .dash-grid{display:grid;gap:.85rem}
     .dash-metrics{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:1rem}
-    .dash-card{min-width:0;border:1px solid var(--dash-line);border-radius:1rem;background:var(--dash-panel);box-shadow:0 10px 28px rgba(0,0,0,.12)}
+    .dash-card{min-width:0;border:1px solid var(--dash-line);border-radius:1rem;background:var(--dash-panel);box-shadow:0 10px 28px rgba(0,0,0,.12);transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease}
+    .dash-card:hover{transform:translateY(-3px);border-color:rgba(105,180,255,.55);box-shadow:0 16px 34px rgba(0,0,0,.2)}
     .dash-metric{position:relative;display:flex;align-items:center;gap:.8rem;padding:1rem}
     .dash-icon{display:flex;width:2.65rem;height:2.65rem;flex:0 0 2.65rem;align-items:center;justify-content:center;border-radius:.75rem;background:rgba(34,132,237,.17);color:#8dc5ff;font-size:1.15rem}
     .dash-icon.green{background:rgba(43,196,138,.16);color:#6de0b4}
@@ -46,7 +47,9 @@
     .dash-pill.status-pending,.dash-pill.status-planned,.dash-pill.status-draft{background:rgba(246,162,59,.15);color:#ffc477}
     .dash-pill.status-cancelled,.dash-pill.status-archived{background:rgba(239,91,105,.14);color:#ff929b}
     .dash-person-avatar{display:flex;width:2.1rem;height:2.1rem;flex:0 0 2.1rem;align-items:center;justify-content:center;border:1px solid #365778;border-radius:50%;background:#1a3b5d;color:#b6d9fb;font-size:.68rem;font-weight:800}
-    .dash-assistant{margin:1rem;border:1px solid #264a70;border-radius:.8rem;background:linear-gradient(140deg,#142c4a,#10233e);padding:1rem}
+    .dash-directory-logo{display:flex;width:2.7rem;height:2.7rem;flex:0 0 2.7rem;align-items:center;justify-content:center;border:1px solid rgba(111,169,230,.18);border-radius:.7rem;background:linear-gradient(145deg,#1b5b86,#153754 70%,#12513f);box-shadow:inset 0 1px rgba(255,255,255,.08);color:#e1f3ff;font-size:.67rem;font-weight:800;letter-spacing:.04em}
+    .dash-assistant{margin:1rem;border:1px solid #264a70;border-radius:.8rem;background:linear-gradient(140deg,#142c4a,#10233e);padding:1rem;transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease}
+    .dash-assistant:hover{transform:translateY(-2px);border-color:rgba(105,180,255,.55);box-shadow:0 12px 24px rgba(0,0,0,.16)}
     .dash-assistant-top{display:flex;align-items:center;gap:.7rem}
     .dash-assistant-icon{display:grid;width:2.4rem;height:2.4rem;place-items:center;border-radius:.7rem;background:#174d7d;color:#8bd1ff;font-size:1rem}
     .dash-assistant p{color:#a8bad1;font-size:.68rem;line-height:1.55}
@@ -72,6 +75,7 @@
     html:not(.dark) .dash-eyebrow{color:#2878c8}
     html:not(.dark) .dash-date{background:#fff;color:#334155}
     html:not(.dark) .dash-card{box-shadow:0 10px 28px rgba(23,50,77,.07)}
+    html:not(.dark) .dash-card:hover{border-color:#9ac7ec;box-shadow:0 16px 34px rgba(23,50,77,.14)}
     html:not(.dark) .dash-metric-label{color:#52677e}
     html:not(.dark) .dash-metric-note,html:not(.dark) .dash-item-sub,html:not(.dark) .dash-panel-caption{color:#64748b}
     html:not(.dark) .dash-link{color:#176fba}
@@ -83,13 +87,16 @@
     html:not(.dark) .dash-pill.status-pending,html:not(.dark) .dash-pill.status-planned,html:not(.dark) .dash-pill.status-draft{background:#fff3df;color:#9a5b08}
     html:not(.dark) .dash-pill.status-cancelled,html:not(.dark) .dash-pill.status-archived{background:#ffeaec;color:#aa3540}
     html:not(.dark) .dash-person-avatar{border-color:#c9d9e8;background:#eaf2f9;color:#285578}
+    html:not(.dark) .dash-directory-logo{border-color:#d4e6f4;background:linear-gradient(145deg,#d8efff,#e6f2fb 70%,#dff3e9);color:#285578}
     html:not(.dark) .dash-assistant{border-color:#cbdff0;background:linear-gradient(140deg,#f1f8ff,#e8f2fb)}
+    html:not(.dark) .dash-assistant:hover{border-color:#9ac7ec;box-shadow:0 12px 24px rgba(23,50,77,.12)}
     html:not(.dark) .dash-assistant-icon{background:#dceeff;color:#1769aa}
     html:not(.dark) .dash-assistant p{color:#52677e}
     html:not(.dark) .dash-table th{background:#f1f5f9;color:#64748b}
     html:not(.dark) .dash-table tbody tr:hover{background:#f8fafc}
     html:not(.dark) .dash-quick a,html:not(.dark) .dash-quick-links a{border-color:#dce5ef;color:#38536e}
     html:not(.dark) .dash-quick a:hover,html:not(.dark) .dash-quick-links a:hover{border-color:#75acd8;color:#17324d}
+    @media(prefers-reduced-motion:reduce){.dash-card,.dash-assistant{transition:none}.dash-card:hover,.dash-assistant:hover{transform:none}}
     html:not(.dark) .dash-quick-links strong{color:#64748b}
     @media(max-width:1100px){.dash-main-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dash-assistant-panel{grid-column:1/-1}.dash-bottom-grid{grid-template-columns:minmax(0,1.4fr) minmax(220px,.8fr)}.dash-updates-panel{grid-column:1/-1}}
     @media(max-width:700px){.travel-dashboard{padding:1rem}.dash-heading{align-items:flex-start;flex-direction:column}.dash-heading h2{font-size:1.45rem}.dash-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.dash-main-grid,.dash-bottom-grid{grid-template-columns:minmax(0,1fr)}.dash-assistant-panel,.dash-updates-panel{grid-column:auto}.dash-metric{padding:.8rem}.dash-icon{width:2.35rem;height:2.35rem;flex-basis:2.35rem}.dash-metric-value{font-size:1.1rem}}
@@ -145,10 +152,10 @@
             </div>
         </section>
 
-        <section class="dash-card">
+        <a href="{{ route('booking-staff-assignments.index') }}" aria-label="Open Staff Assignments" class="dash-card block text-inherit no-underline transition hover:border-blue-400/60 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400">
             <div class="dash-panel-head">
                 <div><h3 class="dash-panel-title">Assigned Staff</h3><p class="dash-panel-caption">Team members on upcoming departures</p></div>
-                <a class="dash-link" href="{{ route('staff-assignment.index') }}">Staff assignments &rarr;</a>
+                <span class="dash-link">Open assignments directory &rarr;</span>
             </div>
             <div class="dash-list">
                 @forelse ($assignedStaff as $assignment)
@@ -164,7 +171,7 @@
                     <div class="dash-empty">No staff assignments are recorded for upcoming tours.</div>
                 @endforelse
             </div>
-        </section>
+        </a>
 
         <section class="dash-card dash-assistant-panel">
             <div class="dash-panel-head">
@@ -185,26 +192,22 @@
     <div class="dash-grid dash-bottom-grid">
         <section class="dash-card">
             <div class="dash-panel-head">
-                <div><h3 class="dash-panel-title">Recent Bookings</h3><p class="dash-panel-caption">Latest customer reservations in your system</p></div>
-                <a class="dash-link" href="{{ route('bookings.index') }}">View all &rarr;</a>
+                <div><h3 class="dash-panel-title">Suppliers &amp; Partners</h3><p class="dash-panel-caption">Latest records in your business directory</p></div>
+                <a class="dash-link" href="{{ route('suppliers.index') }}">Suppliers &amp; Partners &rarr;</a>
             </div>
-            <div class="dash-table-wrap">
-                <table class="dash-table">
-                    <thead><tr><th>Reference</th><th>Guest</th><th>Tour Package</th><th>Travel Date</th><th>Status</th></tr></thead>
-                    <tbody>
-                        @forelse ($recentBookings as $booking)
-                            <tr>
-                                <td>{{ $booking->reference_no ?? 'HT-' . $booking->id }}</td>
-                                <td>{{ $booking->customer_name }}</td>
-                                <td>{{ $booking->tourPackage?->name ?? 'Package not assigned' }}</td>
-                                <td>{{ $booking->travel_date?->format('M d, Y') ?? '—' }}</td>
-                                <td><span class="dash-pill status-{{ $booking->status ?? 'pending' }}">{{ ucfirst($booking->status ?? 'pending') }}</span></td>
-                            </tr>
-                        @empty
-                            <tr><td colspan="5" class="dash-empty">No bookings have been recorded yet.</td></tr>
-                        @endforelse
-                    </tbody>
-                </table>
+            <div class="dash-list">
+                @forelse ($directoryEntries as $entry)
+                    <div class="dash-person">
+                        <span class="dash-directory-logo" aria-hidden="true">{{ strtoupper(substr($entry->name, 0, 2)) }}</span>
+                        <div class="dash-item-main">
+                            <div class="dash-item-title">{{ $entry->name }}</div>
+                            <div class="dash-item-sub">{{ $entry->directory_type }} · {{ $entry->directory_category }}</div>
+                        </div>
+                        <span class="dash-pill {{ ($entry->status ?? 'active') === 'active' ? 'status-confirmed' : 'status-pending' }}">{{ ucfirst($entry->status ?? 'active') }}</span>
+                    </div>
+                @empty
+                    <div class="dash-empty">No suppliers or partners have been added yet.</div>
+                @endforelse
             </div>
         </section>
 
